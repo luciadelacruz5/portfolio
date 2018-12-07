@@ -1,0 +1,82 @@
+.containerfirst {
+  height: 768px;
+  background-color: #EAC264;
+  position: relative;
+
+}
+
+.description {
+  text-align: left;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 60px;
+  padding: 64px;
+  color: #FFFFFF;
+  position: absolute;
+}
+.containersecond {
+  height: 768px;
+  background-color: #4A4A4A;
+  position: relative;
+
+}
+.proyects {
+  text-align: left;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 40px;
+  padding: 64px;
+  color: #FFFFFF;
+
+}
+.projectscontainer {
+  position: absolute;
+}
+.flex {
+  display: flex;
+  justify-content: center;
+}
+.descriptionproject {
+  text-align: left;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: lighter;
+  font-size: 28px;
+  padding: 64px;
+  size: 120px, 80px;
+  color: #FFFFFF;
+
+}
+.highlight {
+  text-decoration: underline;
+}
+.highlight:hover {
+  background-color: #4A4A4A;
+  text-decoration: none;
+}
+.photo {
+  margin: 60px;
+  padding:60px;
+}
+.proyects:hover {
+  border-radius: 50%;
+}
+.linewhite {
+  color: white;
+  width: 400px;
+  height: 20px;
+  margin:24px 24px 24px 0;
+}
+.rotation {
+  animation-name: rotation;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+}
+@keyframes rotation {
+  animation-duration: 3s;
+  animation: rotation;
+}
+.containerprojects {
+  color: white;
+  height: 300px;
+  position: relative;
+  margin-top: 100px,
+
+}
