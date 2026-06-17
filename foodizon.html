@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foodizon — Lucía de la Cruz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noticia+Text:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --text: #454545; --text-light: #888; --text-lighter: #bbb;
+      --bg: #fff; --bg-alt: #F3F3F3; --border: #e8e8e8;
+      --brand: #1a8c1a; --brand-light: #33CC33;
+      --font-display: 'Noticia Text', serif; --font-body: 'Noto Sans', sans-serif;
+    }
+    html,body{font-family:var(--font-body);color:var(--text);background:var(--bg);overflow-x:hidden}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav-back{display:flex;align-items:center;gap:8px;font-size:0.8125rem;font-weight:500;color:var(--text-light);text-decoration:none}
+    .nav-back:hover{color:var(--text)}
+    .nav-name{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+    .hero-banner{width:100%;margin-top:61px;position:relative;overflow:hidden;background:#0d5c0d;min-height:460px;display:flex;flex-direction:column}
+    .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.35}
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(13,92,13,0.96) 0%,rgba(13,92,13,0.8) 45%,rgba(13,92,13,0.55) 100%)}
+    .hero-inner{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:72px 40px 0}
+    .eyebrow{font-size:0.7rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:12px}
+    .hero-inner h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;color:#fff;letter-spacing:-0.025em;line-height:1.15;margin-bottom:16px}
+    .hero-inner .hero-desc{font-size:1rem;color:rgba(255,255,255,0.6);line-height:1.7;max-width:520px;font-weight:300;margin-bottom:0}
+    .hero-img-wrap{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:28px 40px 0}
+    .hero-img-wrap img{width:100%;display:block;border-radius:10px 10px 0 0;border:1px solid rgba(255,255,255,0.12);border-bottom:none}
+    .case-meta-wrap{max-width:860px;margin:0 auto;padding:40px 40px 0}
+    .case-meta{display:flex;flex-wrap:wrap;gap:32px;padding:32px 0;border-top:1px solid var(--border)}
+    .meta-label{font-size:0.6875rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:5px}
+    .meta-value{font-size:0.9375rem;font-weight:500;color:var(--text)}
+    .impact-banner{background:#0d5c0d;padding:56px 40px}
+    .impact-inner{max-width:860px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+    .impact-number{font-family:var(--font-display);font-size:clamp(2.2rem,4vw,3rem);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1;margin-bottom:8px}
+    .impact-number span{color:rgba(255,255,255,0.4)}
+    .impact-label{font-size:0.8125rem;color:rgba(255,255,255,0.45);line-height:1.5}
+    .case-section{padding:72px 40px;max-width:860px;margin:0 auto}
+    .section-label{font-size:0.6875rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text);margin-bottom:10px}
+    .section-heading{font-family:var(--font-display);font-size:clamp(1.4rem,2.5vw,1.875rem);font-weight:700;color:var(--text);letter-spacing:-0.02em;line-height:1.25;margin-bottom:24px}
+    .body-text{font-size:0.9375rem;color:var(--text-light);line-height:1.8;margin-bottom:16px}
+    .divider{height:1px;background:var(--border);max-width:860px;margin:0 auto}
+    .highlight-quote{border-left:3px solid var(--brand-light);padding:18px 22px;margin:28px 0;background:rgba(51,204,51,0.05);border-radius:0 8px 8px 0}
+    .highlight-quote p{font-family:var(--font-display);font-size:1.0625rem;font-style:italic;color:var(--text);line-height:1.65}
+    .img-full{max-width:860px;margin:28px auto;padding:0 40px}
+    .img-full img{width:100%;display:block;border-radius:10px;border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.07)}
+    .img-full figcaption{font-size:0.75rem;color:var(--text-lighter);margin-top:8px;text-align:center}
+    .img-wide{max-width:1040px;margin:28px auto;padding:0 40px}
+    .img-wide img{width:100%;display:block;border-radius:10px;border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.07)}
+    .img-wide figcaption{font-size:0.75rem;color:var(--text-lighter);margin-top:8px;text-align:center}
+    .personas{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+    .persona-card{padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--bg-alt)}
+    .persona-icon{font-size:1.5rem;margin-bottom:10px}
+    .persona-role{font-size:0.875rem;font-weight:600;color:var(--text);margin-bottom:6px}
+    .persona-desc{font-size:0.8125rem;color:var(--text-light);line-height:1.6}
+    .tech-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+    .tech-pill{font-size:0.75rem;font-weight:600;padding:5px 13px;border-radius:100px;background:var(--bg-alt);border:1px solid var(--border);color:var(--text)}
+    .outcome-list{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+    .outcome-item{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border:1px solid var(--border);border-radius:10px}
+    .outcome-dot{width:20px;height:20px;border-radius:50%;background:rgba(26,140,26,0.1);border:1px solid rgba(26,140,26,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .outcome-dot svg{width:10px;height:10px}
+    .outcome-text{font-size:0.9375rem;color:var(--text);line-height:1.55}
+    .about-client{padding:60px 40px;background:var(--bg-alt);border-top:1px solid var(--border)}
+    .about-client-inner{max-width:860px;margin:0 auto;display:grid;grid-template-columns:180px 1fr;gap:48px;align-items:start}
+    .client-logo-box{width:100%;aspect-ratio:3/2;background:#fff;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--brand)}
+    .about-client-label{font-size:0.625rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:10px;display:block}
+    .about-client-name{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:-0.01em;margin-bottom:14px}
+    .about-client-text{font-size:0.9rem;color:var(--text-light);line-height:1.75}
+    .more-cases{padding:64px 40px;background:var(--bg);border-top:1px solid var(--border)}
+    .more-cases-inner{max-width:860px;margin:0 auto}
+    .more-cases-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:28px}
+    .more-cases-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);letter-spacing:-0.01em}
+    .more-cases-back{font-size:0.8125rem;font-weight:500;color:var(--text-light);text-decoration:none}
+    .more-cases-back:hover{color:var(--text)}
+    .more-cases-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .more-card{display:block;text-decoration:none;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg);transition:transform 0.2s,box-shadow 0.2s}
+    .more-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.08)}
+    .more-card-thumb{height:100px;display:flex;align-items:flex-end;padding:16px 20px}
+    .more-card-name{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:#fff;letter-spacing:-0.025em;line-height:1}
+    .more-card-body{padding:14px 20px 18px}
+    .more-card-client{font-size:0.6875rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:4px}
+    .more-card-desc{font-size:0.8125rem;color:var(--text-light);line-height:1.55}
+    .thumb-alis{background:linear-gradient(135deg,#9a0a32,#E10E49)}
+    .thumb-madrid{background:linear-gradient(135deg,#8B0000,#c0392b)}
+    footer{padding:28px 40px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    footer p{font-size:0.8125rem;color:var(--text-lighter)}
+    .footer-links{display:flex;gap:20px}
+    .footer-links a{font-size:0.8125rem;color:var(--text-light);text-decoration:none}
+    .footer-links a:hover{color:var(--text)}
+    @media(max-width:768px){
+      nav{padding:16px 20px}
+      .hero-inner,.case-meta-wrap,.case-section,.about-client,.more-cases{padding-left:20px;padding-right:20px}
+      .hero-img-wrap,.img-full,.img-wide{padding-left:20px;padding-right:20px}
+      .personas,.more-cases-grid{grid-template-columns:1fr}
+      .impact-inner{grid-template-columns:1fr 1fr}
+      .about-client-inner{grid-template-columns:1fr;gap:24px}
+      footer{flex-direction:column;gap:16px;text-align:center}
+    }
+    @media(max-width:480px){.impact-inner{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>Back</a>
+  <a href="index.html" class="nav-name">Lucía de la Cruz</a>
+</nav>
+
+<div class="hero-banner">
+  <img class="hero-bg" src="assets/foodizon/01-mockup.png" alt="" aria-hidden="true" />
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <p class="eyebrow">Foodizon</p>
+    <h1>The first AI platform that prevents<br/>food waste in commercial kitchens</h1>
+    <p class="hero-desc">An MVP designed to give kitchen managers real-time control over inventory, waste tracking, and demand forecasting — saving up to 3% of total turnover.</p>
+  </div>
+  <div class="hero-img-wrap">
+    <img src="assets/foodizon/01-mockup.png" alt="Foodizon — tablet mockup in real kitchen context" />
+  </div>
+</div>
+
+<div class="case-meta-wrap">
+  <div class="case-meta">
+    <div><p class="meta-label">Role</p><p class="meta-value">UX/UI Designer</p></div>
+    <div><p class="meta-label">Client</p><p class="meta-value">Foodizon</p></div>
+    <div><p class="meta-label">Type</p><p class="meta-value">Web platform · MVP design</p></div>
+    <div><p class="meta-label">UI Library</p><p class="meta-value">Material UI (MUI) + React</p></div>
+  </div>
+</div>
+
+<div class="impact-banner">
+  <div class="impact-inner">
+    <div><div class="impact-number">3<span>%</span></div><div class="impact-label">Of total turnover saved by eliminating forecasting and planning errors</div></div>
+    <div><div class="impact-number">MVP</div><div class="impact-label">First-of-its-kind AI platform for demand forecasting and food management</div></div>
+    <div><div class="impact-number">3</div><div class="impact-label">Core user types researched — Head Chefs, Kitchen Managers, Inventory Managers</div></div>
+  </div>
+</div>
+
+<div class="case-section">
+  <p class="section-label">Background</p>
+  <h2 class="section-heading">Food waste isn't a disposal problem.
+It's a planning problem.<br/>It's a forecasting problem.</h2>
+  <p class="body-text">Commercial kitchens lose significant revenue not because of spoilage, but because of poor planning — ordering too much, misjudging demand, or failing to track what's being wasted and why. Foodizon was built to solve this at the source.</p>
+  <p class="body-text">The platform combines AI-powered demand forecasting with real-time inventory management and waste tracking — giving kitchen managers the data they need to make better decisions before waste happens, not after.</p>
+  <div class="highlight-quote">
+    <p>"Businesses can save up to 3% of their total turnover by eliminating waste caused by forecasting and planning errors — not by cutting costs, but by making better decisions."</p>
+  </div>
+  <div class="personas">
+    <div class="persona-card"><div class="persona-icon">👨‍🍳</div><div class="persona-role">Head Chef</div><div class="persona-desc">Plans menus and manages kitchen output. Needs visibility on what's available and about to expire.</div></div>
+    <div class="persona-card"><div class="persona-icon">📋</div><div class="persona-role">Kitchen Manager</div><div class="persona-desc">Oversees operations and reporting. Needs data-driven insights to identify and reduce waste patterns.</div></div>
+    <div class="persona-card"><div class="persona-icon">📦</div><div class="persona-role">Inventory Manager</div><div class="persona-desc">Handles day-to-day stock management. Needs fast, accurate tracking of items, expiry dates, and discrepancies.</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Sales forecast</p>
+  <h2 class="section-heading">AI-powered daily forecasting<br/>with real impact factors.</h2>
+  <p class="body-text">The sales forecast screen gives kitchen managers a clear view of expected revenue for each day of the week — broken down by dish, with year-on-year comparison and a weekly total. Impact factors like weather and local events are surfaced directly, so managers can adjust orders before they're placed.</p>
+</div>
+
+<figure class="img-wide">
+  <img src="assets/foodizon/04-sales-forecast.png" alt="Foodizon — Sales forecast screen with weekly view and impact factors" />
+  <figcaption>Sales forecast — daily breakdown by dish, YoY comparison, weather and event impact factors</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Reporting & analytics</p>
+  <h2 class="section-heading">From data to decisions —<br/>in a single screen.</h2>
+  <p class="body-text">The reporting dashboard is the most strategically important screen in the platform. It shows real-time inventory discrepancies, sales vs previous year, food waste by cause, and the most wasted ingredients — turning complex operational data into a clear picture that kitchen managers can act on immediately.</p>
+</div>
+
+<figure class="img-wide">
+  <img src="assets/foodizon/02-reporting.png" alt="Foodizon — Reporting dashboard with waste analytics" />
+  <figcaption>Reporting dashboard — inventory discrepancies, waste causes, and sales comparison in one view</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Stock management</p>
+  <h2 class="section-heading">Visual stock management<br/>built for the kitchen floor.</h2>
+  <p class="body-text">The stock management screen organises ingredients by preparation stage — defrost, fridge movement, cold prep, hot prep — with visual product cards showing quantities needed. Designed for use on a tablet mounted in the kitchen, prioritising speed and clarity over density.</p>
+</div>
+
+<figure class="img-wide">
+  <img src="assets/foodizon/05-stock-management.png" alt="Foodizon — Stock management with visual product grid" />
+  <figcaption>Stock management — visual ingredient grid organised by preparation stage and kitchen workflow</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">UI decisions</p>
+  <h2 class="section-heading">Material UI for speed,<br/>colour for clarity.</h2>
+  <p class="body-text">Material UI was chosen as the primary component library to streamline handoff to the development team — providing a consistent design language, built-in accessibility, and a full set of ready-to-use components. A vibrant colour palette makes critical information stand out, with colour-coded alerts for expiry dates and waste severity.</p>
+  <div class="tech-row">
+    <span class="tech-pill">Material UI (MUI)</span>
+    <span class="tech-pill">React</span>
+    <span class="tech-pill">Colour-coded alerts</span>
+    <span class="tech-pill">Responsive design</span>
+    <span class="tech-pill">WCAG accessibility</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Outcomes</p>
+  <h2 class="section-heading">An MVP that kitchen staff<br/>actually wanted to use.</h2>
+  <div class="outcome-list">
+    <div class="outcome-item"><div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div><p class="outcome-text">Kitchen staff praised the platform for user-friendliness — facilitating rapid adoption without formal training.</p></div>
+    <div class="outcome-item"><div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div><p class="outcome-text">Complete validated MVP delivered — covering Sales Forecast, Reporting, Stock Management, and Inventory.</p></div>
+    <div class="outcome-item"><div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div><p class="outcome-text">Material UI handoff package delivered — enabling the development team to implement designs accurately from day one.</p></div>
+  </div>
+</div>
+
+<div class="about-client">
+  <div class="about-client-inner">
+    <div class="client-logo-box">Foodizon</div>
+    <div>
+      <span class="about-client-label">About the client</span>
+      <p class="about-client-name">Foodizon</p>
+      <p class="about-client-text">Foodizon is the first AI platform dedicated to preventing food waste in the foodservice industry. By leveraging machine learning and demand forecasting, it enables commercial kitchens to save up to 3% of their total turnover by eliminating waste caused by forecasting and planning errors. The platform provides businesses with a reliable, data-driven system for food management planning, turning a traditionally reactive process into a proactive one.</p>
+    </div>
+  </div>
+</div>
+
+<div class="more-cases">
+  <div class="more-cases-inner">
+    <div class="more-cases-header">
+      <p class="more-cases-title">More case studies</p>
+      <a href="index.html" class="more-cases-back">← Back to all work</a>
+    </div>
+    <div class="more-cases-grid">
+      <a href="aliseda.html" class="more-card">
+        <div class="more-card-thumb thumb-alis"><span class="more-card-name">Aliseda</span></div>
+        <div class="more-card-body"><p class="more-card-client">Aliseda Inmobiliaria</p><p class="more-card-desc">A smart lock app designed for real estate agents in 10 days.</p></div>
+      </a>
+      <a href="madrid-digital.html" class="more-card">
+        <div class="more-card-thumb thumb-madrid"><span class="more-card-name">Madrid Digital</span></div>
+        <div class="more-card-body"><p class="more-card-client">Comunidad de Madrid</p><p class="more-card-desc">Redesigning public services for 6.8 million citizens.</p></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Lucía de la Cruz</p>
+  <div class="footer-links">
+    <a href="mailto:luciadcr8@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/lucia-de-la-cruz-rodriguez/" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+</body>
+</html>

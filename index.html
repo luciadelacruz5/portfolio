@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lucía de la Cruz — UX/UI Designer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noticia+Text:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #51FFA1;
+      --accent-dim: rgba(81,255,161,0.10);
+      --accent-mid: rgba(81,255,161,0.30);
+      --text: #454545;
+      --text-light: #888;
+      --text-lighter: #bbb;
+      --bg: #ffffff;
+      --bg-alt: #F3F3F3;
+      --border: #e8e8e8;
+      --font-display: 'Noticia Text', serif;
+      --font-body: 'Noto Sans', sans-serif;
+    }
+
+    html { scroll-snap-type: y mandatory; overflow-y: scroll; overflow-x: hidden; }
+    body { font-family: var(--font-body); color: var(--text); background: var(--bg); }
+
+    .fs {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── PILL NAV ── */
+    .pill-nav {
+      position: fixed;
+      top: 20px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 300;
+      display: flex; align-items: center; gap: 2px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 6px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    .pill-name {
+      font-family: var(--font-display);
+      font-size: 0.8125rem; font-weight: 700;
+      color: var(--text); padding: 6px 16px;
+      letter-spacing: -0.01em; white-space: nowrap;
+      border-right: 1px solid var(--border); margin-right: 4px;
+    }
+
+    .pill-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 6px 14px; border-radius: 100px; border: none;
+      background: transparent;
+      font-family: var(--font-body); font-size: 0.75rem; font-weight: 500;
+      color: var(--text-light); cursor: pointer;
+      transition: all 0.2s; white-space: nowrap; letter-spacing: 0.02em;
+    }
+
+    .pill-btn .pdot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--text-lighter); transition: all 0.2s; flex-shrink: 0;
+    }
+
+    .pill-btn.active { background: var(--text); color: #fff; }
+    .pill-btn.active .pdot { background: var(--accent); }
+    .pill-btn:hover:not(.active) { color: var(--text); background: var(--bg-alt); }
+
+    /* right dots */
+    .nav-dots {
+      position: fixed; right: 22px; top: 50%;
+      transform: translateY(-50%); z-index: 200;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+
+    .nav-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(0,0,0,0.15);
+      cursor: pointer; transition: all 0.3s; border: none; padding: 0;
+    }
+
+    .nav-dot.active {
+      background: var(--accent); transform: scale(1.6);
+      box-shadow: 0 0 6px rgba(81,255,161,0.5);
+    }
+
+    /* ═══════════════════════════════════════
+       PROMPT LOG DRAWER — versioned changelog
+    ═══════════════════════════════════════ */
+    .log-trigger {
+      position: fixed; left: 0; top: 50%;
+      transform: translateY(-50%); z-index: 400;
+    }
+
+    .log-tab {
+      writing-mode: vertical-rl; text-orientation: mixed;
+      transform: rotate(180deg);
+      display: flex; align-items: center; gap: 7px;
+      padding: 14px 10px;
+      background: var(--text);
+      border: 1px solid rgba(255,255,255,0.1); border-left: none;
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+      font-family: var(--font-body); font-size: 0.6875rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      transition: all 0.2s;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+      white-space: nowrap;
+    }
+
+    .log-tab:hover { color: #fff; background: #2a2a2a; }
+
+    .log-tab-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); animation: pulse 2s ease infinite; flex-shrink: 0;
+    }
+
+    .log-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.12);
+      z-index: 490; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .log-overlay.on { opacity: 1; pointer-events: all; }
+
+    .log-drawer {
+      position: fixed; left: -460px; top: 0; bottom: 0; width: 440px;
+      background: #111;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      z-index: 500;
+      display: flex; flex-direction: column;
+      box-shadow: 4px 0 40px rgba(0,0,0,0.3);
+      transition: left 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+      overflow: hidden;
+    }
+
+    .log-drawer.open { left: 0; }
+
+    /* drawer header */
+    .log-head {
+      padding: 28px 28px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .log-head-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; margin-bottom: 16px;
+    }
+
+    .log-head-title {
+      font-family: var(--font-display);
+      font-size: 1.0625rem; font-weight: 700;
+      color: #fff; letter-spacing: -0.01em; margin-bottom: 3px;
+    }
+
+    .log-head-sub {
+      font-size: 0.75rem; color: rgba(255,255,255,0.4); line-height: 1.5;
+    }
+
+    .log-close {
+      width: 28px; height: 28px; border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06);
+      cursor: pointer; font-size: 0.875rem; color: rgba(255,255,255,0.5);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s; flex-shrink: 0; margin-left: 12px; margin-top: 2px;
+    }
+
+    .log-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+    .log-meta { display: flex; gap: 20px; }
+    .log-meta-item { }
+
+    .log-meta-label {
+      font-size: 0.5625rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25); margin-bottom: 2px;
+    }
+
+    .log-meta-val {
+      font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.7);
+      font-family: monospace;
+    }
+
+    .log-meta-val.green { color: var(--accent); }
+
+    .log-scroll { flex: 1; overflow-y: auto; padding: 0; }
+    .log-scroll::-webkit-scrollbar { width: 3px; }
+    .log-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .log-version { border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+    .log-version-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 28px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer; transition: background 0.15s;
+    }
+
+    .log-version-header:hover { background: rgba(255,255,255,0.06); }
+
+    .log-v-num {
+      font-family: monospace; font-size: 0.75rem; font-weight: 700;
+      color: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 4px; padding: 2px 8px; flex-shrink: 0;
+    }
+
+    .log-v-title { font-size: 0.8125rem; font-weight: 600; color: rgba(255,255,255,0.65); flex: 1; }
+    .log-v-date { font-size: 0.6875rem; color: rgba(255,255,255,0.2); font-family: monospace; flex-shrink: 0; }
+
+    .log-v-chevron {
+      width: 14px; height: 14px; color: rgba(255,255,255,0.2);
+      transition: transform 0.2s; flex-shrink: 0;
+    }
+
+    .log-version.open .log-v-chevron { transform: rotate(180deg); }
+
+    .log-entries { display: none; flex-direction: column; gap: 0; padding: 0 28px; }
+    .log-version.open .log-entries { display: flex; }
+
+    .log-entry {
+      display: flex; gap: 14px; padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05); position: relative;
+    }
+
+    .log-entry:last-child { border-bottom: none; }
+
+    .log-stripe { width: 3px; flex-shrink: 0; border-radius: 2px; align-self: stretch; min-height: 20px; margin-top: 2px; }
+    .log-stripe.add    { background: var(--accent); }
+    .log-stripe.change { background: #FFCA01; }
+    .log-stripe.remove { background: #E10E49; }
+    .log-stripe.note   { background: rgba(255,255,255,0.15); }
+
+    .log-entry-body { flex: 1; min-width: 0; }
+
+    .log-entry-type {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.5625rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px;
+    }
+
+    .log-entry-type.add    { color: var(--accent); }
+    .log-entry-type.change { color: #FFCA01; }
+    .log-entry-type.remove { color: #E10E49; }
+    .log-entry-type.note   { color: rgba(255,255,255,0.25); }
+
+    .log-entry-who { font-size: 0.5625rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-left: 8px; }
+    .log-entry-who.is-claude { color: var(--accent); opacity: 0.8; }
+
+    .log-entry-text { font-size: 0.8125rem; color: rgba(255,255,255,0.6); line-height: 1.55; }
+    .log-entry-text code { font-family: monospace; font-size: 0.75rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; }
+    .log-entry-text em { color: rgba(255,255,255,0.35); font-style: normal; }
+
+    .log-prompt {
+      margin-top: 8px; padding: 8px 12px;
+      background: rgba(255,255,255,0.04); border-left: 2px solid rgba(255,255,255,0.1);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.75rem; color: rgba(255,255,255,0.35);
+      line-height: 1.55; font-style: italic;
+    }
+
+    /* ═══════════════════════════════════════
+       S1 · HERO
+    ═══════════════════════════════════════ */
+    #s-hero {
+      align-items: center; justify-content: center;
+      padding: 100px 24px 80px; background: var(--bg);
+    }
+
+    .hero-inner {
+      width: 100%; max-width: 900px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .hero-year {
+      font-size: 0.625rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-lighter); margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem,4.8vw,4.4rem); font-weight: 700;
+      color: var(--text); text-align: center; line-height: 1.12;
+      letter-spacing: -0.03em; margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .hero-title em {
+      font-style: italic; font-weight: 400;
+      color: var(--text-light);
+      display: block;
+    }
+
+    .hero-sub {
+      font-size: 0.8125rem; color: var(--text-lighter); font-weight: 400;
+      text-align: center; letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .ai-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px; background: var(--accent-dim);
+      border: 1px solid var(--accent-mid); border-radius: 100px;
+      font-size: 0.75rem; font-weight: 500; color: var(--text);
+      letter-spacing: 0.01em; margin-bottom: 32px;
+    }
+
+    .ai-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.5);opacity:.6} }
+
+    /* chat */
+    .chat-wrap {
+      width: 100%; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 18px;
+      overflow: hidden; box-shadow: 0 8px 48px rgba(0,0,0,0.06);
+    }
+
+    .chat-bar {
+      display: flex; align-items: center; gap: 6px;
+      padding: 11px 16px; background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chat-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .cd-r{background:#ff5f57} .cd-y{background:#febc2e} .cd-g{background:var(--accent)}
+
+    .chat-bar-lbl {
+      margin-left: 6px; font-size: 0.625rem; font-weight: 600;
+      color: var(--text-lighter); letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    .chat-msgs {
+      padding: 20px 18px 12px; min-height: 130px; max-height: 280px;
+      overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
+    }
+
+    .chat-msgs::-webkit-scrollbar{width:3px}
+    .chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+    .cmsg{display:flex;flex-direction:column;gap:3px;animation:msgIn .2s ease forwards}
+    @keyframes msgIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+    .cmsg.ai{align-self:flex-start;align-items:flex-start;max-width:88%}
+    .cmsg.usr{align-self:flex-end;align-items:flex-end;max-width:88%}
+    .cmsg-lbl{font-size:.5625rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-lighter)}
+    .cmsg-bbl{padding:10px 14px;border-radius:12px;font-size:.875rem;line-height:1.6}
+    .cmsg.ai .cmsg-bbl{background:var(--bg-alt);border:1px solid var(--border);border-bottom-left-radius:3px}
+    .cmsg.usr .cmsg-bbl{background:var(--text);color:#fff;border-bottom-right-radius:3px}
+
+    .chat-choices{padding:0 18px 18px;display:flex;flex-direction:column;gap:7px}
+
+    .choice-btn{
+      width:100%;text-align:left;padding:10px 14px;
+      border:1.5px solid var(--border);border-radius:10px;
+      background:var(--bg);font-family:var(--font-body);font-size:.8125rem;
+      color:var(--text);cursor:pointer;transition:all .16s;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .choice-btn:hover{border-color:var(--accent);background:var(--accent-dim)}
+    .choice-arrow{color:var(--text-lighter);font-size:.875rem}
+
+    .typing{display:none;align-self:flex-start;padding:10px 14px;background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;border-bottom-left-radius:3px;gap:4px;align-items:center}
+    .typing.on{display:flex}
+    .tdot{width:5px;height:5px;border-radius:50%;background:var(--text-lighter);animation:tb 1.2s infinite}
+    .tdot:nth-child(2){animation-delay:.2s}.tdot:nth-child(3){animation-delay:.4s}
+    @keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+
+    .cursor-blink{display:inline-block;width:2px;height:1em;background:var(--accent);margin-left:2px;vertical-align:text-bottom;animation:blink 1s step-end infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    .scroll-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;opacity:.3}
+    .scroll-hint span{font-size:.5625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-light)}
+    .scroll-hint svg{animation:bob 2s ease infinite}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+    /* ═══════════════════════════════════════
+       S2 · WORK — EDITORIAL LIST
+    ═══════════════════════════════════════ */
+    #s-work {
+      background: var(--bg);
+      min-height: 100vh;
+      padding: 80px 0 100px;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .work-header {
+      padding: 0 60px 32px;
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+
+    .work-header .s-eye {
+      font-size: 0.625rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-lighter);
+    }
+
+    .work-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem,2.5vw,2.2rem); font-weight: 700;
+      color: var(--text); letter-spacing: -0.025em;
+    }
+
+    .work-count {
+      font-size: 0.625rem; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--text-lighter);
+    }
+
+    /* ── PROJECT LIST ── */
+    .proj-list {
+      flex: 1;
+      padding: 0 60px;
+      display: flex; flex-direction: column;
+    }
+
+    .proj-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      align-items: center;
+      gap: 0 28px;
+      padding: 26px 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none; color: inherit;
+      transition: background 0.18s;
+      cursor: pointer;
+    }
+
+    .proj-row:first-child { border-top: 1px solid var(--border); }
+
+    /* neon sweep on hover */
+    .proj-row::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--accent-dim);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.36s cubic-bezier(0.76,0,0.24,1);
+      pointer-events: none; z-index: 0;
+    }
+    .proj-row:hover::before { transform: scaleX(1); }
+    .proj-row > * { position: relative; z-index: 1; }
+
+    /* index number */
+    .proj-n {
+      font-family: var(--font-display);
+      font-size: 0.8125rem; font-weight: 400; font-style: italic;
+      color: var(--text-lighter); text-align: right; line-height: 1;
+      transition: color 0.2s;
+    }
+    .proj-row:hover .proj-n { color: var(--accent); }
+
+    /* centre */
+    .proj-mid {}
+
+    .proj-client {
+      font-size: 0.625rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--text-lighter);
+      margin-bottom: 5px; display: block; transition: color 0.2s;
+    }
+    .proj-row:hover .proj-client { color: var(--text-light); }
+
+    .proj-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.55rem, 2.6vw, 2.4rem);
+      font-weight: 700; line-height: 1.05; letter-spacing: -0.025em;
+      color: var(--text); transition: color 0.2s;
+    }
+    .proj-row:hover .proj-name { color: var(--text); }
+
+    /* right */
+    .proj-right {
+      display: flex; align-items: center; gap: 20px;
+    }
+
+    .proj-tags {
+      display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end;
+    }
+
+    .proj-tag {
+      font-size: 0.5625rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-lighter);
+      border: 1px solid var(--border); border-radius: 3px;
+      padding: 3px 7px; transition: border-color 0.2s, color 0.2s;
+    }
+    .proj-row:hover .proj-tag {
+      border-color: var(--accent-mid); color: var(--text-light);
+    }
+
+    /* CTA button */
+    .proj-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 100px;
+      background: transparent;
+      border: 1.5px solid var(--border);
+      font-family: var(--font-body); font-size: 0.6875rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-light); white-space: nowrap;
+      text-decoration: none;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .proj-cta svg { transition: transform 0.2s; }
+    .proj-row:hover .proj-cta {
+      background: var(--accent); border-color: var(--accent);
+      color: #1a1a1a;
+    }
+    .proj-row:hover .proj-cta svg { transform: translate(2px,-2px); }
+
+    @media (max-width: 860px) {
+      .work-header { padding: 0 24px 28px; }
+      .proj-list { padding: 0 24px; }
+      .proj-row { grid-template-columns: 32px 1fr; }
+      .proj-right { display: none; }
+    }
+
+
+    /* ═══════════════════════════════════════
+       S3 · ABOUT
+    ═══════════════════════════════════════ */
+    #s-about {
+      background: var(--bg);
+      align-items: center; justify-content: center; padding: 80px 40px;
+    }
+
+    .about-inner {
+      max-width: 1100px; width: 100%;
+      display: grid; grid-template-columns: 1fr 1.1fr;
+      gap: 80px; align-items: center;
+    }
+
+    .about-left .s-eye { color: var(--text); margin-bottom: 12px; }
+
+    .about-left .s-eye {
+      font-size: 0.625rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase; display: block;
+    }
+
+    .about-left h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem,3vw,2.6rem); font-weight: 700;
+      letter-spacing: -0.025em; color: var(--text);
+      line-height: 1.2; margin-bottom: 20px;
+    }
+
+    .about-left p {
+      font-size: 0.9375rem; color: var(--text-light);
+      line-height: 1.8; margin-bottom: 14px;
+    }
+
+    .about-left p strong { color: var(--text); font-weight: 600; }
+
+    .clients-row { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .client-chip {
+      font-size: 0.75rem; font-weight: 500;
+      color: var(--text); background: var(--bg-alt);
+      border: 1px solid var(--border); border-radius: 100px; padding: 5px 13px;
+    }
+
+    .about-right { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .astat {
+      padding: 24px; border-radius: 14px;
+      border: 1px solid var(--border); background: var(--bg-alt);
+    }
+
+    .astat-n {
+      font-family: var(--font-display); font-size: 2.25rem;
+      font-weight: 700; color: var(--text);
+      letter-spacing: -0.03em; line-height: 1; margin-bottom: 6px;
+    }
+
+    .astat-n span { color: var(--accent); }
+    .astat-l { font-size: 0.8125rem; color: var(--text-light); line-height: 1.4; }
+
+    /* ═══════════════════════════════════════
+       S4 · CONTACT
+    ═══════════════════════════════════════ */
+    #s-contact {
+      background: var(--bg); border-top: 1px solid var(--border);
+      align-items: center; justify-content: center; padding: 80px 40px;
+    }
+
+    .contact-inner { max-width: 600px; width: 100%; text-align: center; }
+
+    .contact-eye {
+      font-size: 0.625rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text); margin-bottom: 12px;
+    }
+
+    .contact-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem,5vw,3.4rem); font-weight: 700;
+      color: var(--text); letter-spacing: -0.035em;
+      line-height: 1.1; margin-bottom: 16px;
+    }
+
+    .contact-sub {
+      font-size: 0.9375rem; color: var(--text-light);
+      line-height: 1.7; margin-bottom: 40px;
+    }
+
+    .contact-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    .cbtn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 24px; border-radius: 10px;
+      font-family: var(--font-body); font-size: 0.875rem; font-weight: 600;
+      text-decoration: none; transition: all 0.2s;
+    }
+
+    .cbtn-accent { background: var(--text); color: #fff; }
+    .cbtn-accent:hover { background: #2a2a2a; transform: translateY(-2px); }
+    .cbtn-ghost { background: transparent; color: var(--text-light); border: 1px solid var(--border); }
+    .cbtn-ghost:hover { border-color: var(--text); color: var(--text); }
+
+    .contact-foot {
+      margin-top: 48px; font-size: 0.6875rem;
+      color: var(--text-lighter); letter-spacing: 0.04em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .pill-name { display: none; }
+      .work-header { padding: 0 24px 32px; }
+      .rc-inner { padding: 0 24px 20px; }
+      .log-drawer { width: 320px; left: -340px; }
+    }
+
+    @media (max-width: 640px) {
+      .pill-btn { padding: 6px 10px; font-size: 0.6875rem; }
+      .nav-dots { display: none; }
+      .rc-madrid .rc-name { font-size: 3rem; }
+      .rc-cbre   .rc-name { font-size: 2.4rem; }
+      .rc-resp .rc-name,.rc-yay .rc-name { font-size: 2rem; }
+      .rc-food .rc-name,.rc-alis .rc-name { font-size: 1.75rem; }
+      .rc-madrid { height:180px; } .rc-cbre { height:150px; }
+      .rc-resp,.rc-yay { height:130px; }
+      .rc-food,.rc-alis { height:110px; }
+      #s-about { padding: 80px 20px; }
+      .about-inner { grid-template-columns: 1fr; gap: 36px; }
+      #s-contact { padding: 80px 20px; }
+      .log-tab { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-snap-type: none; }
+      *,*::before,*::after { animation: none!important; transition: none!important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PILL NAV -->
+<nav class="pill-nav">
+  <span class="pill-name">Lucía de la Cruz</span>
+  <button class="pill-btn active" data-target="s-hero"><span class="pdot"></span>Intro</button>
+  <button class="pill-btn" data-target="s-work"><span class="pdot"></span>Work</button>
+  <button class="pill-btn" data-target="s-about"><span class="pdot"></span>About</button>
+  <button class="pill-btn" data-target="s-contact"><span class="pdot"></span>Contact</button>
+</nav>
+
+<!-- RIGHT DOTS -->
+<div class="nav-dots">
+  <button class="nav-dot active" data-target="s-hero"></button>
+  <button class="nav-dot" data-target="s-work"></button>
+  <button class="nav-dot" data-target="s-about"></button>
+  <button class="nav-dot" data-target="s-contact"></button>
+</div>
+
+<!-- PROMPT LOG -->
+<div class="log-overlay" id="logOverlay"></div>
+
+<div class="log-trigger">
+  <button class="log-tab" id="logTabBtn">
+    <span class="log-tab-dot"></span>
+    How this was built
+  </button>
+</div>
+
+<aside class="log-drawer" id="logDrawer">
+  <div class="log-head" style="padding:28px 28px 20px;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;">
+    <div class="log-head-top">
+      <div>
+        <p class="log-head-title">lucía-portfolio · design log</p>
+        <p class="log-head-sub">Versioned record of AI-assisted design decisions. Each entry shows who initiated the change, what was built, and why.</p>
+      </div>
+      <button class="log-close" id="logClose">✕</button>
+    </div>
+    <div class="log-meta">
+      <div class="log-meta-item">
+        <p class="log-meta-label">Collaborators</p>
+        <p class="log-meta-val">Lucía + Claude</p>
+      </div>
+      <div class="log-meta-item">
+        <p class="log-meta-label">Status</p>
+        <p class="log-meta-val green">● Live</p>
+      </div>
+      <div class="log-meta-item">
+        <p class="log-meta-label">Versions</p>
+        <p class="log-meta-val">6</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-scroll">
+
+    <!-- v0.8 — CURRENT -->
+    <div class="log-version open">
+      <div class="log-version-header" onclick="toggleVersion(this)">
+        <span class="log-v-num">v0.8</span>
+        <span class="log-v-title">Editorial project list — final direction</span>
+        <span class="log-v-date">Jun 2026</span>
+        <svg class="log-v-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="log-entries">
+        <div class="log-entry">
+          <div class="log-stripe change"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type change">~ Changed</span><span class="log-entry-who">Lucía</span></div>
+            <p class="log-entry-text">Rejected all card-based layouts. Requested an editorial, clean, intuitive direction — no background images in the project grid.</p>
+            <div class="log-prompt">"I don't like this design at all. Can you make a new proposal, different from everything before, without background images? I'm looking for an editorial, clean, intuitive style."</div>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="log-stripe add"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type add">+ Added</span><span class="log-entry-who is-claude">Claude</span></div>
+            <p class="log-entry-text">Replaced the card grid with a magazine index list: hairline dividers, numbered rows in italic serif, project title at editorial scale, tags and a CTA button flush right. Accent colour (<code>#51FFA1</code>) reserved for hover state only — neon sweep fills the row background on interaction. Cover images removed from the layout and repurposed as cursor-following previews on hover.</p>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="log-stripe change"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type change">~ Changed</span><span class="log-entry-who">Lucía</span></div>
+            <p class="log-entry-text">Cursor preview removed. Design log updated to 8 versions. Requested full deployable folder.</p>
+            <div class="log-prompt">"Remove the hover image. Update the design log. Give me the whole folder with everything I need."</div>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="log-stripe remove"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type remove">− Removed</span><span class="log-entry-who is-claude">Claude</span></div>
+            <p class="log-entry-text">Cursor-following image preview removed from <code>#s-work</code>. The list now communicates project identity through typography and tags alone — consistent with the editorial restraint of the direction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v0.7 -->
+    <div class="log-version">
+      <div class="log-version-header" onclick="toggleVersion(this)">
+        <span class="log-v-num">v0.7</span>
+        <span class="log-v-title">Cover images — background vs. hover preview</span>
+        <span class="log-v-date">Jun 2026</span>
+        <svg class="log-v-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="log-entries">
+        <div class="log-entry">
+          <div class="log-stripe add"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type add">+ Added</span><span class="log-entry-who">Lucía</span></div>
+            <p class="log-entry-text">Supplied new cover images as JPGs with correct brand background colours (pink, mint green, cream) to replace earlier dark-background PNGs.</p>
+            <div class="log-prompt">"Use the new images I'm giving you — and respect the transparencies for white backgrounds."</div>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="log-stripe change"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type change">~ Changed</span><span class="log-entry-who is-claude">Claude</span></div>
+            <p class="log-entry-text">Attempted three strategies: (1) 2-col white card grid with cover images as <code>object-fit: cover</code>; (2) restored original index with images injected as per-card <code>background-image</code> via CSS; (3) editorial list with images attached only to cursor hover. All three rejected or iterated — led directly to v0.8.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v0.6 -->
+    <div class="log-version">
+      <div class="log-version-header" onclick="toggleVersion(this)">
+        <span class="log-v-num">v0.6</span>
+        <span class="log-v-title">Changelog drawer — professional rewrite</span>
+        <span class="log-v-date">Jun 2026</span>
+        <svg class="log-v-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="log-entries">
+        <div class="log-entry">
+          <div class="log-stripe change"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type change">~ Changed</span><span class="log-entry-who">Lucía</span></div>
+            <p class="log-entry-text">Prompt log rewritten as versioned changelog with stronger visual structure and professional tone.</p>
+            <div class="log-prompt">"The prompt log drawer needs to be more professional in the writing. I need it to be more visual."</div>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="log-stripe change"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type change">~ Changed</span><span class="log-entry-who is-claude">Claude</span></div>
+            <p class="log-entry-text">Redesigned drawer: collapsible version blocks, diff stripe system (green add / yellow change / red remove / grey note), monospace metadata header, prompt quotes separated visually from analysis. Writing register shifted to technical audit trail — consistent with the AI-collaboration angle of the portfolio.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v0.5 -->
+    <div class="log-version">
+      <div class="log-version-header" onclick="toggleVersion(this)">
+        <span class="log-v-num">v0.5</span>
+        <span class="log-v-title">AI transparency layer</span>
+        <span class="log-v-date">Jun 2026</span>
+        <svg class="log-v-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="log-entries">
+        <div class="log-entry">
+          <div class="log-stripe add"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type add">+ Added</span><span class="log-entry-who">Lucía</span></div>
+            <p class="log-entry-text">Requested stronger AI collaboration signal to impress hiring managers and attract clients who want AI-forward designers.</p>
+            <div class="log-prompt">"How can we make it more impactful in terms of AI collaboration?"</div>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="log-stripe add"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type add">+ Added</span><span class="log-entry-who is-claude">Claude</span></div>
+            <p class="log-entry-text">Built prompt log drawer: persistent side tab with pulsing dot, exposing the real design conversation as a versioned changelog. Connected to guided chat — the "fellow designer" path opens the drawer directly, turning the transparency mechanism itself into a portfolio talking point.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v0.4 -->
+    <div class="log-version">
+      <div class="log-version-header" onclick="toggleVersion(this)">
+        <span class="log-v-num">v0.4</span>
+        <span class="log-v-title">Project grid — 4 attempts before a direction landed</span>
+        <span class="log-v-date">Jun 2026</span>
+        <svg class="log-v-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="log-entries">
+        <div class="log-entry">
+          <div class="log-stripe remove"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type remove">− Removed</span><span class="log-entry-who">Lucía</span></div>
+            <p class="log-entry-text">Horizontal scroll, bento grid, and image-led 2-column rejected in sequence.</p>
+            <div class="log-prompt">"I still don't like the grid for the projects. I would like them to be more visual, bigger. Forget about the images — just create something with the typography and colors. Something new."</div>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="log-stripe add"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type add">+ Added</span><span class="log-entry-who is-claude">Claude</span></div>
+            <p class="log-entry-text">Designed typographic river: full-width colour blocks stacked vertically, no images. Project name rendered at editorial scale (up to 9rem) as the sole visual. Brand colours derived from each client's identity: <code>#BF0000</code> Madrid, <code>#095F34</code> CBRE, <code>#748F48</code> Respirapp, <code>#FFCA01</code> Yay!, <code>#33CC33</code> Foodizon, <code>#E10E49</code> Aliseda. Accepted — held until v0.7 cover image integration prompted a rethink.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v0.3 -->
+    <div class="log-version">
+      <div class="log-version-header" onclick="toggleVersion(this)">
+        <span class="log-v-num">v0.3</span>
+        <span class="log-v-title">Architecture — full-screen snap sections</span>
+        <span class="log-v-date">Jun 2026</span>
+        <svg class="log-v-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="log-entries">
+        <div class="log-entry">
+          <div class="log-stripe change"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type change">~ Changed</span><span class="log-entry-who">Lucía</span></div>
+            <p class="log-entry-text">Replaced scrolling layout with full-screen snap sections. Top header nav rejected — too traditional.</p>
+            <div class="log-prompt">"I think the navigation and layout is too traditional. Can you suggest something different?"</div>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="log-stripe add"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type add">+ Added</span><span class="log-entry-who is-claude">Claude</span></div>
+            <p class="log-entry-text">Proposed 3 nav directions: floating pill (bottom), corner monogram only, slide-in side panel. Lucía selected floating pill — repositioned to top. <code>scroll-snap-type: y mandatory</code> applied to the root, giving each section full viewport ownership. Freeform AI chat replaced with guided Q&A flow — 4 entry paths (hiring, freelance, explore, peer), no API dependency.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v0.2 -->
+    <div class="log-version">
+      <div class="log-version-header" onclick="toggleVersion(this)">
+        <span class="log-v-num">v0.2</span>
+        <span class="log-v-title">Case studies — Madrid Digital + CBRE</span>
+        <span class="log-v-date">Jun 2026</span>
+        <svg class="log-v-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="log-entries">
+        <div class="log-entry">
+          <div class="log-stripe add"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type add">+ Added</span><span class="log-entry-who is-claude">Claude</span></div>
+            <p class="log-entry-text">Built <code>madrid-digital.html</code> and <code>cbre.html</code>. For Madrid Digital, sourced public data: 10M annual accesses, 220+ services, 218K public employees, 98.4% digital strategy executed ahead of schedule. Used to anchor the case study with credible impact metrics rather than placeholder copy.</p>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="log-stripe add"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type add">+ Added</span><span class="log-entry-who is-claude">Claude</span></div>
+            <p class="log-entry-text">CBRE case study built from uploaded PDF. Extracted verbatim user quotes, NN/g heuristic findings, sprint workflow, before/after comparisons. Design decision: inline SVG illustrations for before/after — avoids additional image assets and keeps the file self-contained.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v0.1 -->
+    <div class="log-version">
+      <div class="log-version-header" onclick="toggleVersion(this)">
+        <span class="log-v-num">v0.1</span>
+        <span class="log-v-title">Initial concept — AI conversational portfolio</span>
+        <span class="log-v-date">Jun 2026</span>
+        <svg class="log-v-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="log-entries">
+        <div class="log-entry">
+          <div class="log-stripe add"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type add">+ Added</span><span class="log-entry-who">Lucía</span></div>
+            <p class="log-entry-text">Brief: build a portfolio that showcases AI-assisted UX/UI design. The portfolio itself should be the demonstration — not a page about AI, but a page built with it.</p>
+            <div class="log-prompt">"I would like this portfolio to be AI based. This will be a showcase of how to use AI to create a UX/UI project — the project itself will be this portfolio."</div>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="log-stripe add"></div>
+          <div class="log-entry-body">
+            <div><span class="log-entry-type add">+ Added</span><span class="log-entry-who is-claude">Claude</span></div>
+            <p class="log-entry-text">Proposed concept: guided conversational hero (simulated chat with Lucía as the AI persona) + typefaces <code>Noticia Text</code> + <code>Noto Sans</code>. Palette: <code>#454545</code> text, <code>#51FFA1</code> accent, <code>#F3F3F3</code> surface. The accent green connects the AI badge, nav active states, and interactive elements into a coherent system without feeling branded.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</aside>
+
+<!-- ── S1: HERO ── -->
+<section class="fs" id="s-hero">
+  <div class="hero-inner">
+    <p class="hero-year">Portfolio — 2026</p>
+    <h1 class="hero-title">This portfolio is the case study. <em>Where do you want to start?</em></h1>
+    <p class="hero-sub">UX/UI Designer · Strategic · Human-centered</p>
+    <div class="ai-badge">
+      <span class="ai-dot"></span>
+      AI-powered portfolio — built with Claude
+    </div>
+    <div class="chat-wrap">
+      <div class="chat-bar">
+        <div class="chat-dot cd-r"></div>
+        <div class="chat-dot cd-y"></div>
+        <div class="chat-dot cd-g"></div>
+        <span class="chat-bar-lbl">Lucía — guided conversation</span>
+      </div>
+      <div class="chat-msgs" id="chatMsgs">
+        <div class="cmsg ai">
+          <span class="cmsg-lbl">Lucía</span>
+          <div class="cmsg-bbl" id="greetEl"></div>
+        </div>
+        <div class="typing" id="typingEl">
+          <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+        </div>
+      </div>
+      <div class="chat-choices" id="choicesEl"></div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- ── S2: WORK — EDITORIAL LIST ── -->
+<section class="fs" id="s-work">
+  <div class="work-header">
+    <div>
+      <p class="s-eye">Selected work</p>
+      <h2>Projects that made a difference</h2>
+    </div>
+    <span class="work-count">6 projects</span>
+  </div>
+
+  <div class="proj-list">
+
+    <a class="proj-row" href="madrid-digital.html" data-preview="madrid">
+      <span class="proj-n">01</span>
+      <div class="proj-mid">
+        <span class="proj-client">Comunidad de Madrid</span>
+        <h3 class="proj-name">Madrid Digital</h3>
+      </div>
+      <div class="proj-right">
+        <div class="proj-tags">
+          <span class="proj-tag">GovTech</span>
+          <span class="proj-tag">UX Research</span>
+          <span class="proj-tag">Accesibilidad</span>
+        </div>
+        <span class="proj-cta">
+          View project
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="12" x2="12" y2="2"/><polyline points="5 2 12 2 12 9"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="proj-row" href="cbre.html" data-preview="cbre">
+      <span class="proj-n">02</span>
+      <div class="proj-mid">
+        <span class="proj-client">CBRE</span>
+        <h3 class="proj-name">Commute Analyzer</h3>
+      </div>
+      <div class="proj-right">
+        <div class="proj-tags">
+          <span class="proj-tag">B2B SaaS</span>
+          <span class="proj-tag">Data Viz</span>
+          <span class="proj-tag">Redesign</span>
+        </div>
+        <span class="proj-cta">
+          View project
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="12" x2="12" y2="2"/><polyline points="5 2 12 2 12 9"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="proj-row" href="respirapp.html" data-preview="resp">
+      <span class="proj-n">03</span>
+      <div class="proj-mid">
+        <span class="proj-client">AECC — Asociación Española Contra el Cáncer</span>
+        <h3 class="proj-name">Respirapp</h3>
+      </div>
+      <div class="proj-right">
+        <div class="proj-tags">
+          <span class="proj-tag">Health</span>
+          <span class="proj-tag">Mobile UX/UI</span>
+          <span class="proj-tag">Inclusive design</span>
+        </div>
+        <span class="proj-cta">
+          View project
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="12" x2="12" y2="2"/><polyline points="5 2 12 2 12 9"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="proj-row" href="yay.html" data-preview="yay">
+      <span class="proj-n">04</span>
+      <div class="proj-mid">
+        <span class="proj-client">AENA</span>
+        <h3 class="proj-name">Yay!</h3>
+      </div>
+      <div class="proj-right">
+        <div class="proj-tags">
+          <span class="proj-tag">UI Design</span>
+          <span class="proj-tag">Mobile</span>
+          <span class="proj-tag">Brand System</span>
+        </div>
+        <span class="proj-cta">
+          View project
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="12" x2="12" y2="2"/><polyline points="5 2 12 2 12 9"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="proj-row" href="foodizon.html" data-preview="food">
+      <span class="proj-n">05</span>
+      <div class="proj-mid">
+        <span class="proj-client">Foodizon</span>
+        <h3 class="proj-name">Sales Forecasting</h3>
+      </div>
+      <div class="proj-right">
+        <div class="proj-tags">
+          <span class="proj-tag">Product Design</span>
+          <span class="proj-tag">Dashboard</span>
+          <span class="proj-tag">FoodTech</span>
+        </div>
+        <span class="proj-cta">
+          View project
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="12" x2="12" y2="2"/><polyline points="5 2 12 2 12 9"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="proj-row" href="aliseda.html" data-preview="alis">
+      <span class="proj-n">06</span>
+      <div class="proj-mid">
+        <span class="proj-client">Aliseda Inmobiliaria</span>
+        <h3 class="proj-name">Incident Panel &amp; Asset App</h3>
+      </div>
+      <div class="proj-right">
+        <div class="proj-tags">
+          <span class="proj-tag">App &amp; Web</span>
+          <span class="proj-tag">MVP</span>
+          <span class="proj-tag">Real Estate</span>
+        </div>
+        <span class="proj-cta">
+          View project
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="12" x2="12" y2="2"/><polyline points="5 2 12 2 12 9"/></svg>
+        </span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ── S3: ABOUT ── -->
+<section class="fs" id="s-about">
+  <div class="about-inner">
+    <div class="about-left">
+      <span class="s-eye">About</span>
+      <h2>Strategic thinking.<br/>Human focus.</h2>
+      <p>I'm a UX/UI designer who works at the intersection of research, strategy, and craft. My process is rooted in Design Thinking — understanding systems and people deeply before proposing solutions — and increasingly shaped by AI as a design collaborator, not just a tool.</p>
+      <p>I've worked across sectors where the stakes are real: public services used by millions, enterprise tools that drive revenue, and digital products that touch health and wellbeing. I bring the same rigour to every scale of problem.</p>
+      <p>For 4 years I was lead UX/UI teacher at Ironhack Bootcamp, across Madrid, Berlin, and the full remote Europe campus — where I learned that the best way to understand design is to teach it.</p>
+      <div class="clients-row">
+        <span class="client-chip">Banco Santander</span>
+        <span class="client-chip">BMW</span>
+        <span class="client-chip">Comunidad de Madrid</span>
+        <span class="client-chip">AENA</span>
+        <span class="client-chip">AECC</span>
+        <span class="client-chip">CBRE</span>
+        <span class="client-chip">Aliseda</span>
+        <span class="client-chip">Ironhack</span>
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="astat">
+        <div class="astat-n">4<span>yr</span></div>
+        <div class="astat-l">Lead UX/UI teacher at Ironhack — Madrid, Berlin, remote Europe</div>
+      </div>
+      <div class="astat">
+        <div class="astat-n">8<span>+</span></div>
+        <div class="astat-l">Products shipped across public sector, health, fintech, and real estate</div>
+      </div>
+      <div class="astat">
+        <div class="astat-n">15<span>+</span></div>
+        <div class="astat-l">User research studies conducted — interviews, heuristics, usability testing</div>
+      </div>
+      <div class="astat">
+        <div class="astat-n">218<span>K</span></div>
+        <div class="astat-l">Public employees on systems redesigned for Madrid Digital</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── S4: CONTACT ── -->
+<section class="fs" id="s-contact">
+  <div class="contact-inner">
+    <p class="contact-eye">Get in touch</p>
+    <h2 class="contact-title">Let's make something<br/>worth using.</h2>
+    <p class="contact-sub">Whether you're building a product, scaling a design team, or looking for a collaborator who leads with research — I'd love to hear about it.</p>
+    <div class="contact-links">
+      <a href="mailto:luciadcr8@gmail.com" class="cbtn cbtn-accent">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Say hello
+      </a>
+      <a href="https://www.linkedin.com/in/lucia-de-la-cruz-rodriguez/" target="_blank" class="cbtn cbtn-ghost">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://www.figma.com/proto/B2vxwezm3mSa1u9HDsDwu2/Luc%C3%ADa-de-la-Cruz?node-id=1819-3117&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=1819%3A3117&page-id=1802%3A4389" target="_blank" class="cbtn cbtn-ghost">
+        <svg width="15" height="15" viewBox="0 0 38 57" fill="none"><path d="M19 28.5a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z" fill="#1ABCFE"/><path d="M0 47.5A9.5 9.5 0 0119 47.5V57H9.5A9.5 9.5 0 010 47.5z" fill="#0ACF83"/><path d="M19 0v19h9.5a9.5 9.5 0 000-19H19z" fill="#FF7262"/><path d="M0 9.5a9.5 9.5 0 0019 0V0H9.5A9.5 9.5 0 000 9.5z" fill="#FF3737"/><path d="M0 28.5a9.5 9.5 0 0019 0V19H9.5A9.5 9.5 0 000 28.5z" fill="#A259FF"/></svg>
+        Full portfolio
+      </a>
+    </div>
+    <p class="contact-foot">© 2026 Lucía de la Cruz · Made with Claude</p>
+  </div>
+</section>
+
+<script>
+  // ── NAV ──
+  const allBtns = document.querySelectorAll('[data-target]');
+  const sectionIds = ['s-hero','s-work','s-about','s-contact'];
+
+  allBtns.forEach(b => b.addEventListener('click', () =>
+    document.getElementById(b.dataset.target).scrollIntoView({behavior:'smooth'})
+  ));
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting)
+        allBtns.forEach(b => b.classList.toggle('active', b.dataset.target === e.target.id));
+    });
+  }, { threshold: 0.4 });
+
+  sectionIds.forEach(id => { const el=document.getElementById(id); if(el) io.observe(el); });
+
+  // ── LOG DRAWER ──
+  const drawer = document.getElementById('logDrawer');
+  const overlay = document.getElementById('logOverlay');
+  const tabBtn = document.getElementById('logTabBtn');
+
+  function openLog() {
+    drawer.classList.add('open');
+    overlay.classList.add('on');
+    tabBtn.style.display = 'none';
+  }
+
+  function closeLog() {
+    drawer.classList.remove('open');
+    overlay.classList.remove('on');
+    tabBtn.style.display = '';
+  }
+
+  tabBtn.addEventListener('click', openLog);
+  document.getElementById('logClose').addEventListener('click', closeLog);
+  overlay.addEventListener('click', closeLog);
+
+  function toggleVersion(header) {
+    header.closest('.log-version').classList.toggle('open');
+  }
+
+  // ── TYPEWRITER ──
+  function typeWriter(text, el, speed, cb) {
+    let i=0;
+    const cur=document.createElement('span'); cur.className='cursor-blink';
+    el.appendChild(cur);
+    function go(){
+      if(i<text.length){ cur.insertAdjacentText('beforebegin',text[i++]); setTimeout(go,speed+Math.random()*14); }
+      else { cur.remove(); if(cb) cb(); }
+    }
+    setTimeout(go,500);
+  }
+
+  typeWriter("Hi! I'm Lucía. What brings you here today?", document.getElementById('greetEl'), 20, showFirstChoices);
+
+  // ── GUIDED Q&A ──
+  const flow = {
+    start:{q:"Hi! I'm Lucía. What brings you here today?",choices:[
+      {label:"I'm hiring a UX designer",next:'hiring'},
+      {label:"I'm looking for a freelancer",next:'freelance'},
+      {label:"I want to explore your work",next:'explore'},
+      {label:"I'm a fellow designer, just curious",next:'peer'},
+    ]},
+    hiring:{q:"Great — what kind of work are you looking for?",choices:[
+      {label:"End-to-end UX — research to delivery",next:'hiring_ux'},
+      {label:"UI design and design systems",next:'hiring_ui'},
+      {label:"Someone to lead or grow a team",next:'hiring_lead'},
+    ]},
+    hiring_ux:{q:"That's exactly what I do best. I combine deep user research with practical, iterative design — from public services serving millions to B2B tools used across 5 countries. Want to see the work?",choices:[
+      {label:"Show me Madrid Digital →",action:()=>location.href='madrid-digital.html'},
+      {label:"Show me CBRE Commute Analyzer →",action:()=>location.href='cbre.html'},
+      {label:"Jump to all projects",action:()=>goTo('s-work')},
+    ]},
+    hiring_ui:{q:"I design systems that scale — component libraries, navigation frameworks and data visualisation across fintech to public administration. The CBRE case study shows this well.",choices:[
+      {label:"See CBRE case study →",action:()=>location.href='cbre.html'},
+      {label:"See all work →",action:()=>goTo('s-work')},
+      {label:"Let's talk directly",action:()=>goTo('s-contact')},
+    ]},
+    hiring_lead:{q:"Beyond client work, I led the UX/UI Bootcamp at Ironhack for 4 years — across Madrid, Berlin and remote Europe. I know how to grow designers and build design culture.",choices:[
+      {label:"Tell me more about your background",next:'about_me'},
+      {label:"Get in touch",action:()=>goTo('s-contact')},
+    ]},
+    freelance:{q:"I take on select freelance projects. What are you building?",choices:[
+      {label:"A product from scratch",next:'freelance_new'},
+      {label:"A redesign or improvement",next:'freelance_redo'},
+      {label:"Design for a campaign or launch",next:'freelance_camp'},
+    ]},
+    freelance_new:{q:"I love working on 0-to-1 products — defining the problem is half the design. I start with a research sprint before any wireframe. Want to chat?",choices:[
+      {label:"Let's talk →",action:()=>goTo('s-contact')},
+      {label:"See past work first",action:()=>goTo('s-work')},
+    ]},
+    freelance_redo:{q:"Redesigns are my specialty. I've done them for CBRE's internal tools and the entire Comunidad de Madrid digital portal. I always anchor redesigns in research, not just visual refresh.",choices:[
+      {label:"See the CBRE redesign →",action:()=>location.href='cbre.html'},
+      {label:"See the Madrid Digital →",action:()=>location.href='madrid-digital.html'},
+      {label:"Get in touch",action:()=>goTo('s-contact')},
+    ]},
+    freelance_camp:{q:"Happy to hear more — let's connect and talk through the brief.",choices:[
+      {label:"Contact me →",action:()=>goTo('s-contact')},
+    ]},
+    explore:{q:"Where do you want to start?",choices:[
+      {label:"Featured case studies",action:()=>goTo('s-work')},
+      {label:"Tell me about your process",next:'process'},
+      {label:"Who have you worked with?",next:'clients'},
+      {label:"What's your background?",next:'about_me'},
+    ]},
+    process:{q:"I follow a research-first approach. Good design starts with understanding the problem deeply — before touching any tool. Double Diamond, user interviews, heuristic evaluations, iterative sprints. Always 'why' before 'what'.",choices:[
+      {label:"See a research-heavy project →",action:()=>location.href='madrid-digital.html'},
+      {label:"See an iterative redesign →",action:()=>location.href='cbre.html'},
+      {label:"Back to explore",next:'explore'},
+    ]},
+    clients:{q:"I've worked with Banco Santander, BMW, Comunidad de Madrid, AENA, AECC, CBRE, Aliseda, and Foodizon — across public sector, fintech, mobility, real estate, health, and sustainability.",choices:[
+      {label:"Tell me about Madrid Digital →",action:()=>location.href='madrid-digital.html'},
+      {label:"Tell me about CBRE →",action:()=>location.href='cbre.html'},
+      {label:"Tell me about Respirapp →",action:()=>location.href='respirapp.html'},
+      {label:"See all projects",action:()=>goTo('s-work')},
+    ]},
+    about_me:{q:"I'm a UX/UI designer with a background in strategic, human-centered design. I led the Ironhack UX/UI Bootcamp for 4 years, and I've spent years designing for some of Spain's most complex organizations — from public administration to global real estate.",choices:[
+      {label:"See the full work →",action:()=>goTo('s-work')},
+      {label:"Get in touch →",action:()=>goTo('s-contact')},
+    ]},
+    peer:{q:"Always love connecting with other designers! I'm especially interested in research-driven design, design education, and using AI in the process — this portfolio is a live experiment in exactly that.",choices:[
+      {label:"Open the design log",action:openLog},
+      {label:"See the work",action:()=>goTo('s-work')},
+      {label:"Connect on LinkedIn →",action:()=>window.open('https://www.linkedin.com/in/lucia-de-la-cruz-rodriguez/','_blank')},
+    ]},
+  };
+
+  function goTo(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+  function showFirstChoices(){ renderChoices(flow.start.choices); }
+
+  function addMsg(role,text){
+    const msgs=document.getElementById('chatMsgs');
+    const typing=document.getElementById('typingEl');
+    const div=document.createElement('div'); div.className=`cmsg ${role}`;
+    const lbl=document.createElement('span'); lbl.className='cmsg-lbl';
+    lbl.textContent=role==='ai'?'Lucía':'You';
+    const bbl=document.createElement('div'); bbl.className='cmsg-bbl';
+    bbl.textContent=text;
+    div.appendChild(lbl); div.appendChild(bbl);
+    msgs.insertBefore(div,typing); msgs.scrollTop=msgs.scrollHeight;
+  }
+
+  function renderChoices(choices){
+    const el=document.getElementById('choicesEl'); el.innerHTML='';
+    choices.forEach(c=>{
+      const btn=document.createElement('button'); btn.className='choice-btn';
+      btn.innerHTML=`${c.label}<span class="choice-arrow">›</span>`;
+      btn.addEventListener('click',()=>handleChoice(c));
+      el.appendChild(btn);
+    });
+  }
+
+  function handleChoice(choice){
+    addMsg('usr',choice.label.replace(/\s*→\s*$/,'').trim());
+    document.getElementById('choicesEl').innerHTML='';
+    if(choice.action){
+      const t=document.getElementById('typingEl'); t.classList.add('on');
+      document.getElementById('chatMsgs').scrollTop=9999;
+      setTimeout(()=>{ t.classList.remove('on'); choice.action(); },500);
+      return;
+    }
+    const node=flow[choice.next]; if(!node) return;
+    const t=document.getElementById('typingEl'); t.classList.add('on');
+    document.getElementById('chatMsgs').scrollTop=9999;
+    setTimeout(()=>{
+      t.classList.remove('on'); addMsg('ai',node.q); renderChoices(node.choices);
+      document.getElementById('chatMsgs').scrollTop=9999;
+    },700+Math.random()*300);
+  }
+
+</script>
+</body>
+</html>

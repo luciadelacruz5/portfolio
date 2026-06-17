@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yay! — Lucía de la Cruz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noticia+Text:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--text:#454545;--text-light:#888;--text-lighter:#bbb;--bg:#fff;--bg-alt:#F3F3F3;--border:#e8e8e8;--brand:#c49800;--brand-yellow:#FFCA01;--font-display:'Noticia Text',serif;--font-body:'Noto Sans',sans-serif}
+    html,body{font-family:var(--font-body);color:var(--text);background:var(--bg);overflow-x:hidden}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav-back{display:flex;align-items:center;gap:8px;font-size:0.8125rem;font-weight:500;color:var(--text-light);text-decoration:none}
+    .nav-back:hover{color:var(--text)}
+    .nav-name{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+    .hero-banner{width:100%;margin-top:61px;position:relative;overflow:hidden;min-height:480px;display:flex;flex-direction:column}
+    .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:0.4}
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(150,110,0,0.96) 0%,rgba(150,110,0,0.82) 45%,rgba(150,110,0,0.65) 100%)}
+    .hero-inner{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:72px 40px 32px}
+    .eyebrow{font-size:0.7rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:12px}
+    .hero-inner h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;color:#fff;letter-spacing:-0.025em;line-height:1.15;margin-bottom:16px}
+    .hero-inner .hero-desc{font-size:1rem;color:rgba(255,255,255,0.65);line-height:1.7;max-width:520px;font-weight:300;margin-bottom:0}
+    .hero-screens{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:28px 40px 0;display:grid;grid-template-columns:1fr 1.4fr;gap:12px;align-items:end}
+    .hscreen{border-radius:8px 8px 0 0;overflow:hidden;border:1px solid rgba(255,255,255,0.15);border-bottom:none}
+    .hscreen-label{font-size:0.5625rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);padding:6px 10px;background:rgba(0,0,0,0.2)}
+    .hscreen img{width:100%;display:block;object-fit:cover;object-position:top;max-height:240px}
+    .case-meta-wrap{max-width:860px;margin:0 auto;padding:40px 40px 0}
+    .case-meta{display:flex;flex-wrap:wrap;gap:32px;padding:32px 0;border-top:1px solid var(--border)}
+    .meta-label{font-size:0.6875rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:5px}
+    .meta-value{font-size:0.9375rem;font-weight:500;color:var(--text)}
+    .impact-banner{background:#1a1a1a;padding:56px 40px}
+    .impact-inner{max-width:860px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+    .impact-number{font-family:var(--font-display);font-size:clamp(2.2rem,4vw,3rem);font-weight:700;color:var(--brand-yellow);letter-spacing:-0.03em;line-height:1;margin-bottom:8px}
+    .impact-number span{color:rgba(255,202,1,0.45)}
+    .impact-label{font-size:0.8125rem;color:rgba(255,255,255,0.4);line-height:1.5}
+    .case-section{padding:72px 40px;max-width:860px;margin:0 auto}
+    .section-label{font-size:0.6875rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text);margin-bottom:10px}
+    .section-heading{font-family:var(--font-display);font-size:clamp(1.4rem,2.5vw,1.875rem);font-weight:700;color:var(--text);letter-spacing:-0.02em;line-height:1.25;margin-bottom:24px}
+    .body-text{font-size:0.9375rem;color:var(--text-light);line-height:1.8;margin-bottom:16px}
+    .divider{height:1px;background:var(--border);max-width:860px;margin:0 auto}
+    .highlight-quote{border-left:3px solid var(--brand-yellow);padding:18px 22px;margin:28px 0;background:rgba(255,202,1,0.06);border-radius:0 8px 8px 0}
+    .highlight-quote p{font-family:var(--font-display);font-size:1.0625rem;font-style:italic;color:var(--text);line-height:1.65}
+    .img-full{max-width:860px;margin:28px auto;padding:0 40px}
+    .img-full img{width:100%;display:block;border-radius:10px;border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.07)}
+    .img-full figcaption{font-size:0.75rem;color:var(--text-lighter);margin-top:8px;text-align:center}
+    .img-wide{max-width:1040px;margin:28px auto;padding:0 40px}
+    .img-wide img{width:100%;display:block;border-radius:10px;border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.07)}
+    .img-wide figcaption{font-size:0.75rem;color:var(--text-lighter);margin-top:8px;text-align:center}
+    .img-2up{max-width:1040px;margin:28px auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .img-2up img{width:100%;display:block;border-radius:10px;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+    .img-2up figcaption{font-size:0.6875rem;color:var(--text-lighter);margin-top:6px;text-align:center}
+    .color-decision{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+    .color-card{padding:20px;border-radius:12px;border:1px solid var(--border)}
+    .color-card.before{background:var(--bg-alt)}
+    .color-card.after{background:#1a1a1a}
+    .color-label{font-size:0.625rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px}
+    .color-card.before .color-label{color:var(--text-lighter)}
+    .color-card.after .color-label{color:rgba(255,255,255,0.35)}
+    .color-swatch{width:100%;height:36px;border-radius:6px;margin-bottom:10px}
+    .swatch-yellow{background:#FFCA01}
+    .swatch-black{background:#1a1a1a;border:1px solid rgba(255,255,255,0.1)}
+    .color-title{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:5px}
+    .color-card.before .color-title{color:var(--text)}
+    .color-card.after .color-title{color:#fff}
+    .color-desc{font-size:0.8125rem;line-height:1.6}
+    .color-card.before .color-desc{color:var(--text-light)}
+    .color-card.after .color-desc{color:rgba(255,255,255,0.45)}
+    .color-badge{display:inline-block;font-size:0.5625rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:100px;margin-top:8px}
+    .badge-fail{background:rgba(225,14,73,0.1);color:#E10E49;border:1px solid rgba(225,14,73,0.2)}
+    .badge-pass{background:rgba(81,255,161,0.1);color:#1a7a4a;border:1px solid rgba(81,255,161,0.25)}
+    .learnings-list{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+    .learning-item{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border:1px solid var(--border);border-radius:10px}
+    .learning-num{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--brand-yellow);flex-shrink:0;min-width:24px;line-height:1.4}
+    .learning-title{font-size:0.875rem;font-weight:600;color:var(--text);margin-bottom:4px}
+    .learning-desc{font-size:0.8125rem;color:var(--text-light);line-height:1.6}
+    .about-client{padding:60px 40px;background:var(--bg-alt);border-top:1px solid var(--border)}
+    .about-client-inner{max-width:860px;margin:0 auto;display:grid;grid-template-columns:180px 1fr;gap:48px;align-items:start}
+    .client-logo-box{width:100%;aspect-ratio:3/2;background:#fff;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--brand)}
+    .about-client-label{font-size:0.625rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:10px;display:block}
+    .about-client-name{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:-0.01em;margin-bottom:14px}
+    .about-client-text{font-size:0.9rem;color:var(--text-light);line-height:1.75}
+    .more-cases{padding:64px 40px;background:var(--bg);border-top:1px solid var(--border)}
+    .more-cases-inner{max-width:860px;margin:0 auto}
+    .more-cases-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:28px}
+    .more-cases-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);letter-spacing:-0.01em}
+    .more-cases-back{font-size:0.8125rem;font-weight:500;color:var(--text-light);text-decoration:none}
+    .more-cases-back:hover{color:var(--text)}
+    .more-cases-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .more-card{display:block;text-decoration:none;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg);transition:transform 0.2s,box-shadow 0.2s}
+    .more-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.08)}
+    .more-card-thumb{height:100px;display:flex;align-items:flex-end;padding:16px 20px}
+    .more-card-name{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:#fff;letter-spacing:-0.025em;line-height:1}
+    .more-card-body{padding:14px 20px 18px}
+    .more-card-client{font-size:0.6875rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:4px}
+    .more-card-desc{font-size:0.8125rem;color:var(--text-light);line-height:1.55}
+    .thumb-madrid{background:linear-gradient(135deg,#8B0000,#c0392b)}
+    .thumb-resp{background:linear-gradient(135deg,#4a6b28,#748F48)}
+    footer{padding:28px 40px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    footer p{font-size:0.8125rem;color:var(--text-lighter)}
+    .footer-links{display:flex;gap:20px}
+    .footer-links a{font-size:0.8125rem;color:var(--text-light);text-decoration:none}
+    .footer-links a:hover{color:var(--text)}
+    @media(max-width:768px){
+      nav{padding:16px 20px}
+      .hero-inner,.case-meta-wrap,.case-section,.about-client,.more-cases{padding-left:20px;padding-right:20px}
+      .hero-screens{grid-template-columns:1fr;padding:20px 20px 0}
+      .img-full,.img-wide,.img-2up{padding-left:20px;padding-right:20px}
+      .img-2up,.color-decision,.more-cases-grid{grid-template-columns:1fr}
+      .impact-inner{grid-template-columns:1fr 1fr}
+      .about-client-inner{grid-template-columns:1fr;gap:24px}
+      footer{flex-direction:column;gap:16px;text-align:center}
+    }
+    @media(max-width:480px){.impact-inner{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>Back</a>
+  <a href="index.html" class="nav-name">Lucía de la Cruz</a>
+</nav>
+
+<div class="hero-banner">
+  <img class="hero-bg" src="assets/yay/01-hero-photo.png" alt="" aria-hidden="true" />
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <p class="eyebrow">AENA — Aeropuertos Españoles y Navegación Aérea</p>
+    <h1>A parking app designed<br/>for two different users at once</h1>
+    <p class="hero-desc">UI design of a dual-app system for AENA's airport parking service — one for customers, one for valets — unified by a shared design system and atomic design methodology.</p>
+  </div>
+  <div class="hero-screens">
+    <div class="hscreen">
+      <p class="hscreen-label">App splash — customer</p>
+      <img src="assets/yay/02-mockup.png" alt="Yay! splash screen — Tú vuela que Ya Aparco Yo" />
+    </div>
+    <div class="hscreen">
+      <p class="hscreen-label">Brand guidelines</p>
+      <img src="assets/yay/03-brand-guidelines.png" alt="Yay! brand guidelines" />
+    </div>
+  </div>
+</div>
+
+<div class="case-meta-wrap">
+  <div class="case-meta">
+    <div><p class="meta-label">Role</p><p class="meta-value">UI Designer</p></div>
+    <div><p class="meta-label">Client</p><p class="meta-value">AENA — Aeropuertos Españoles y Navegación Aérea</p></div>
+    <div><p class="meta-label">Type</p><p class="meta-value">Dual mobile app · UI design system</p></div>
+    <div><p class="meta-label">Tools</p><p class="meta-value">Sketch · InVision · Zeplin</p></div>
+  </div>
+</div>
+
+<div class="impact-banner">
+  <div class="impact-inner">
+    <div><div class="impact-number">2</div><div class="impact-label">Separate apps — Customer and Valet — sharing one unified design system</div></div>
+    <div><div class="impact-number">Atomic</div><div class="impact-label">Design approach — from smallest elements up to full screens</div></div>
+    <div><div class="impact-number">WCAG</div><div class="impact-label">Accessibility decision overturned the initial colour proposal before launch</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ APP STORE SECTION ═══════════════ -->
+<section style="background:#0a0a0a;padding:72px 40px;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 65% 80% at 85% 50%,rgba(255,202,1,0.12) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 5% 30%,rgba(255,202,1,0.06) 0%,transparent 55%);pointer-events:none;"></div>
+  <div style="max-width:860px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+    <div>
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,202,1,0.12);border:1px solid rgba(255,202,1,0.25);border-radius:100px;padding:5px 14px;margin-bottom:20px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:#FFCA01;display:inline-block;"></span>
+        <span style="font-size:0.6875rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#FFCA01;">Live at AENA airports</span>
+      </div>
+      <h2 style="font-family:'Noticia Text',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:#fff;letter-spacing:-0.025em;line-height:1.15;margin-bottom:16px;">Yay! is live.<br/>Real airports.<br/>Real users.</h2>
+      <p style="font-size:0.9375rem;color:rgba(255,255,255,0.5);line-height:1.75;margin-bottom:32px;">The app we designed for AENA is available on iOS and Android across all AENA-managed airports in Spain. The full dual-app system — customer and valet — is live and processing real parking transactions every day.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <a href="https://apps.apple.com/es/app/yay/id1541252613" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:16px;padding:16px 22px;background:#fff;border-radius:14px;text-decoration:none;max-width:260px;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <svg width="24" height="28" viewBox="0 0 20 24" fill="#000"><path d="M16.52 12.74c-.03-3.04 2.48-4.5 2.59-4.57-1.41-2.07-3.61-2.35-4.39-2.38-1.87-.19-3.65 1.1-4.6 1.1-.95 0-2.42-1.08-3.98-1.05-2.05.03-3.94 1.19-4.99 3.01-2.13 3.7-.55 9.19 1.53 12.2 1.02 1.47 2.22 3.12 3.81 3.06 1.53-.06 2.11-.99 3.96-.99 1.85 0 2.37.99 4 .96 1.65-.03 2.69-1.5 3.69-2.98.66-.99 1.17-2.07 1.47-3.22-3.36-1.28-3.09-5.14-3.09-5.14zm-2.9-10.02c.83-1.02 1.4-2.43 1.24-3.85-1.2.05-2.68.81-3.54 1.81-.77.9-1.45 2.34-1.27 3.72 1.34.1 2.72-.68 3.57-1.68z"/></svg>
+          <div><p style="font-size:0.5625rem;font-weight:500;color:#888;margin-bottom:1px;letter-spacing:0.04em;">Download on the</p><p style="font-size:1.0625rem;font-weight:700;color:#000;letter-spacing:-0.01em;line-height:1;">App Store</p></div>
+        </a>
+        <a href="https://play.google.com/store/apps/details?id=com.aena.yay" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:16px;padding:16px 22px;background:#fff;border-radius:14px;text-decoration:none;max-width:260px;transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <svg width="24" height="28" viewBox="0 0 21 24" fill="none"><path d="M1.22.84C.79 1.3.54 2.01.54 2.93v18.14c0 .92.25 1.63.68 2.09l.11.1 10.16-10.16v-.24L1.33.73l-.11.11z" fill="#4285F4"/><path d="M15.87 16.44l-3.38-3.38v-.24l3.38-3.38.08.04 4.01 2.28c1.14.65 1.14 1.71 0 2.36l-4.01 2.28-.08.04z" fill="#FBBC04"/><path d="M15.95 16.4L12.49 12.94 1.22 24.21c.38.4.99.45 1.68.05l13.05-7.86" fill="#EA4335"/><path d="M15.95 9.48L2.9 1.62C2.21 1.22 1.6 1.27 1.22 1.67l11.27 11.27 3.46-3.46z" fill="#34A853"/></svg>
+          <div><p style="font-size:0.5625rem;font-weight:500;color:#888;margin-bottom:1px;letter-spacing:0.04em;">Get it on</p><p style="font-size:1.0625rem;font-weight:700;color:#000;letter-spacing:-0.01em;line-height:1;">Google Play</p></div>
+        </a>
+      </div>
+      <div style="margin-top:28px;display:flex;gap:10px;flex-wrap:wrap;">
+        <div style="padding:7px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;font-size:0.75rem;color:rgba(255,255,255,0.5);">🛫 All AENA airports</div>
+        <div style="padding:7px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;font-size:0.75rem;color:rgba(255,255,255,0.5);">📱 iOS + Android</div>
+        <div style="padding:7px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;font-size:0.75rem;color:rgba(255,255,255,0.5);">🌐 Web version</div>
+      </div>
+    </div>
+    <!-- Two phones -->
+    <div style="display:flex;justify-content:center;align-items:flex-end;gap:12px;">
+      <svg viewBox="0 0 180 360" xmlns="http://www.w3.org/2000/svg" style="width:46%;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.6));">
+        <rect x="2" y="2" width="176" height="356" rx="26" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        <rect x="7" y="7" width="166" height="346" rx="22" fill="#FFCA01"/>
+        <rect x="64" y="10" width="48" height="16" rx="8" fill="#1a1a1a"/>
+        <rect x="7" y="7" width="166" height="56" rx="22" fill="#1a1a1a"/>
+        <text x="90" y="38" text-anchor="middle" font-size="14" font-weight="800" fill="#FFCA01" font-family="serif">yay!</text>
+        <rect x="18" y="74" width="144" height="80" rx="10" fill="rgba(0,0,0,0.08)"/>
+        <text x="90" y="104" text-anchor="middle" font-size="9" font-weight="600" fill="#1a1a1a" font-family="sans-serif">Tu reserva · Terminal T4</text>
+        <text x="90" y="122" text-anchor="middle" font-size="17" font-weight="700" fill="#1a1a1a" font-family="serif">Madrid Barajas</text>
+        <text x="90" y="138" text-anchor="middle" font-size="7" fill="rgba(0,0,0,0.5)" font-family="sans-serif">3 días · 08:30 → 12:45</text>
+        <rect x="18" y="168" width="144" height="36" rx="10" fill="#1a1a1a"/>
+        <text x="90" y="190" text-anchor="middle" font-size="10" font-weight="700" fill="#FFCA01" font-family="sans-serif">Abrir parking</text>
+        <rect x="18" y="216" width="68" height="52" rx="8" fill="rgba(0,0,0,0.08)"/>
+        <rect x="94" y="216" width="68" height="52" rx="8" fill="rgba(0,0,0,0.08)"/>
+        <text x="52" y="237" text-anchor="middle" font-size="7" fill="rgba(0,0,0,0.45)" font-family="sans-serif">Entrada</text>
+        <text x="52" y="252" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a" font-family="sans-serif">08:30</text>
+        <text x="128" y="237" text-anchor="middle" font-size="7" fill="rgba(0,0,0,0.45)" font-family="sans-serif">Salida</text>
+        <text x="128" y="252" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a" font-family="sans-serif">12:45</text>
+        <rect x="7" y="315" width="166" height="38" rx="0" fill="rgba(0,0,0,0.1)"/>
+      </svg>
+      <svg viewBox="0 0 180 360" xmlns="http://www.w3.org/2000/svg" style="width:46%;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.6));margin-bottom:24px;">
+        <rect x="2" y="2" width="176" height="356" rx="26" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        <rect x="7" y="7" width="166" height="346" rx="22" fill="#fff"/>
+        <rect x="64" y="10" width="48" height="16" rx="8" fill="#1a1a1a"/>
+        <rect x="7" y="7" width="166" height="56" rx="22" fill="#e07020"/>
+        <text x="90" y="38" text-anchor="middle" font-size="12" font-weight="800" fill="#fff" font-family="serif">Valet</text>
+        <rect x="18" y="74" width="144" height="44" rx="8" fill="#fff8f0" stroke="#fde0b0" stroke-width="1"/>
+        <rect x="26" y="84" width="8" height="24" rx="2" fill="#e07020"/>
+        <text x="44" y="96" font-size="8" font-weight="600" fill="#1a1a1a" font-family="sans-serif">Recoger vehículo · B2-34</text>
+        <text x="44" y="108" font-size="7" fill="#888" font-family="sans-serif">Alta prioridad</text>
+        <rect x="18" y="124" width="144" height="40" rx="8" fill="#f8f8f8" stroke="#e8e8e8" stroke-width="1"/>
+        <rect x="26" y="134" width="8" height="20" rx="2" fill="#ddd"/>
+        <text x="44" y="148" font-size="8" fill="#888" font-family="sans-serif">Entregar · T1 Puerta 3</text>
+        <rect x="18" y="170" width="144" height="40" rx="8" fill="#f8f8f8" stroke="#e8e8e8" stroke-width="1"/>
+        <rect x="26" y="180" width="8" height="20" rx="2" fill="#ddd"/>
+        <text x="44" y="194" font-size="8" fill="#888" font-family="sans-serif">Estacionar · Planta C</text>
+        <rect x="18" y="222" width="66" height="40" rx="8" fill="#fff8f0" stroke="#fde0b0" stroke-width="1"/>
+        <rect x="96" y="222" width="66" height="40" rx="8" fill="#fff8f0" stroke="#fde0b0" stroke-width="1"/>
+        <text x="51" y="239" text-anchor="middle" font-size="14" font-weight="700" fill="#e07020" font-family="serif">7</text>
+        <text x="51" y="252" text-anchor="middle" font-size="6" fill="#888" font-family="sans-serif">pendientes</text>
+        <text x="129" y="239" text-anchor="middle" font-size="14" font-weight="700" fill="#e07020" font-family="serif">12</text>
+        <text x="129" y="252" text-anchor="middle" font-size="6" fill="#888" font-family="sans-serif">completadas</text>
+        <rect x="7" y="315" width="166" height="38" rx="0" fill="#f8f8f8" stroke="#e8e8e8" stroke-width="1"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="case-section">
+  <p class="section-label">Background</p>
+  <h2 class="section-heading">One service.<br/>Two very different users.</h2>
+  <p class="body-text">Yay! is AENA's airport parking app — designed to make the experience of parking at a Spanish airport effortless. The service operates with two distinct user groups: customers who book and manage their parking, and valets who handle the physical logistics.</p>
+  <div class="highlight-quote">
+    <p>"Both user groups have their dedicated applications. Each is identified by its colour, while the product maintains consistency through shared elements and a unified structure."</p>
+  </div>
+</div>
+
+<!-- Brand guidelines -->
+<figure class="img-wide">
+  <img src="assets/yay/03-brand-guidelines.png" alt="Yay! brand guidelines — logo, colours, typography, buttons" />
+  <figcaption>Brand guidelines — dual style guides (App Usuario + App Valet), logotype applications, typography and button system</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Key design decision</p>
+  <h2 class="section-heading">When yellow fails the<br/>accessibility test.</h2>
+  <p class="body-text">The project initially began with another agency proposing yellow as the primary colour. An accessibility audit showed it failed WCAG contrast standards for interactive elements. The decision was made to switch the primary colour to black — with yellow and orange retained as user identity and accent colours.</p>
+  <div class="color-decision">
+    <div class="color-card before">
+      <p class="color-label">Initial proposal</p>
+      <div class="color-swatch swatch-yellow"></div>
+      <p class="color-title">Yellow as primary</p>
+      <p class="color-desc">Proposed by a previous agency. Used for all buttons, icons, and primary actions.</p>
+      <span class="color-badge badge-fail">✗ Fails WCAG contrast</span>
+    </div>
+    <div class="color-card after">
+      <p class="color-label">Final decision</p>
+      <div class="color-swatch swatch-black"></div>
+      <p class="color-title">Black as primary</p>
+      <p class="color-desc">Black for all interactive elements. Yellow and orange retained as user identity colours.</p>
+      <span class="color-badge badge-pass">✓ Meets WCAG standards</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Customer app — full flow</p>
+  <h2 class="section-heading">Yellow for customers.<br/>Every screen, every state.</h2>
+  <p class="body-text">The customer app covers the full parking journey — from onboarding and booking through payment, reservation management, and loyalty features. The atomic design approach ensured every screen was built from reusable components, keeping the UI consistent across 40+ screens.</p>
+</div>
+
+<figure class="img-wide">
+  <img src="assets/yay/04-screens.png" alt="Yay! customer app — complete screen flow" />
+  <figcaption>Customer app — complete flow across all states: onboarding, booking, payment, and account management</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Valet app — full flow</p>
+  <h2 class="section-heading">Orange for valets.<br/>Built for fast, on-the-move use.</h2>
+  <p class="body-text">The valet app uses orange as its identity colour and is designed for operational speed — agents need to access information and take actions quickly. The same underlying design system ensures consistency with the customer app while adapting the UX for a completely different context of use.</p>
+</div>
+
+<figure class="img-wide">
+  <img src="assets/yay/05-screens2.png" alt="Yay! valet app — complete screen flow" />
+  <figcaption>Valet app — full operational flow in orange, sharing the same design system as the customer app</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Web version</p>
+  <h2 class="section-heading">Mobile-first.
+Web-ready. Web-ready.</h2>
+  <p class="body-text">In addition to both native apps, the project included web and responsive versions — delivered in a separate Sketch file with full handoff via Zeplin.</p>
+</div>
+
+<figure class="img-wide">
+  <img src="assets/yay/06-web-screens.png" alt="Yay! web screens — responsive version" />
+  <figcaption>Web version — responsive design adapting the Yay! experience across screen sizes</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Key learnings</p>
+  <h2 class="section-heading">What this project taught me<br/>about design decisions.</h2>
+  <div class="learnings-list">
+    <div class="learning-item"><p class="learning-num">01</p><div><p class="learning-title">Accessibility over aesthetics — always</p><p class="learning-desc">A colour that looks right isn't necessarily a colour that works. Running accessibility checks early avoids costly decisions downstream.</p></div></div>
+    <div class="learning-item"><p class="learning-num">02</p><div><p class="learning-title">Navigation structure shapes visual design</p><p class="learning-desc">Organising screens based on user flows first produces a more coherent and intuitive experience. Structure is design — and it shows in the experience.</p></div></div>
+    <div class="learning-item"><p class="learning-num">03</p><div><p class="learning-title">A design system is a handoff tool</p><p class="learning-desc">The Style Guide wasn't just for this project — it was built for the next designer. Methodically arranged components make future implementation faster.</p></div></div>
+    <div class="learning-item"><p class="learning-num">04</p><div><p class="learning-title">Iterative decisions produce better outcomes</p><p class="learning-desc">Being open to reassessing early choices — based on evidence — leads to a more refined and defensible result.</p></div></div>
+  </div>
+</div>
+
+<div class="about-client">
+  <div class="about-client-inner">
+    <div class="client-logo-box">AENA</div>
+    <div>
+      <span class="about-client-label">About the client</span>
+      <p class="about-client-name">Aeropuertos Españoles y Navegación Aérea</p>
+      <p class="about-client-text">AENA is Spain's public business entity responsible for the management and operation of airports and air navigation services across the country. It oversees numerous airports ranging from major international hubs to regional facilities, and plays a significant role in promoting tourism and air connectivity in Spain.</p>
+    </div>
+  </div>
+</div>
+
+<div class="more-cases">
+  <div class="more-cases-inner">
+    <div class="more-cases-header">
+      <p class="more-cases-title">More case studies</p>
+      <a href="index.html" class="more-cases-back">← Back to all work</a>
+    </div>
+    <div class="more-cases-grid">
+      <a href="madrid-digital.html" class="more-card">
+        <div class="more-card-thumb thumb-madrid"><span class="more-card-name">Madrid Digital</span></div>
+        <div class="more-card-body"><p class="more-card-client">Comunidad de Madrid</p><p class="more-card-desc">Redesigning public services for 6.8 million citizens.</p></div>
+      </a>
+      <a href="respirapp.html" class="more-card">
+        <div class="more-card-thumb thumb-resp"><span class="more-card-name">Respirapp</span></div>
+        <div class="more-card-body"><p class="more-card-client">AECC</p><p class="more-card-desc">Helping people quit smoking through better design.</p></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Lucía de la Cruz</p>
+  <div class="footer-links">
+    <a href="mailto:luciadcr8@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/lucia-de-la-cruz-rodriguez/" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+</body>
+</html>

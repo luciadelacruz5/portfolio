@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aliseda — Lucía de la Cruz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noticia+Text:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --text: #454545; --text-light: #888; --text-lighter: #bbb;
+      --bg: #ffffff; --bg-alt: #F3F3F3; --border: #e8e8e8;
+      --brand: #c0092a; --brand-dark: #9a0a32;
+      --font-display: 'Noticia Text', serif; --font-body: 'Noto Sans', sans-serif;
+    }
+    html, body { font-family: var(--font-body); color: var(--text); background: var(--bg); overflow-x: hidden; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:20px 40px; background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); }
+    .nav-back { display:flex; align-items:center; gap:8px; font-size:0.8125rem; font-weight:500; color:var(--text-light); text-decoration:none; }
+    .nav-back:hover { color:var(--text); }
+    .nav-name { font-family:var(--font-display); font-size:1rem; font-weight:700; color:var(--text); text-decoration:none; }
+
+    /* HERO */
+    .hero-banner { width:100%; margin-top:61px; position:relative; overflow:hidden; background:var(--brand-dark); min-height:480px; display:flex; flex-direction:column; }
+    .hero-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; opacity:0.2; }
+    .hero-overlay { position:absolute; inset:0; background:linear-gradient(to right, rgba(154,10,50,0.97) 0%, rgba(154,10,50,0.82) 45%, rgba(154,10,50,0.6) 100%); }
+    .hero-inner { position:relative; z-index:2; max-width:860px; margin:0 auto; padding:72px 40px 32px; }
+    .eyebrow { font-size:0.7rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:12px; }
+    .hero-inner h1 { font-family:var(--font-display); font-size:clamp(2rem,5vw,3.2rem); font-weight:700; color:#fff; letter-spacing:-0.025em; line-height:1.15; margin-bottom:16px; }
+    .hero-inner .hero-desc { font-size:1rem; color:rgba(255,255,255,0.6); line-height:1.7; max-width:520px; font-weight:300; }
+
+    /* Hero screens row */
+    .hero-screens { position:relative; z-index:2; max-width:1000px; margin:0 auto; padding:32px 40px 0; display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; }
+    .hscreen { border-radius:8px 8px 0 0; overflow:hidden; border:1px solid rgba(255,255,255,0.12); border-bottom:none; }
+    .hscreen-label { font-size:0.5625rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.35); padding:6px 10px; background:rgba(0,0,0,0.2); }
+    .hscreen img { width:100%; display:block; object-fit:cover; object-position:top; max-height:260px; }
+
+    /* META */
+    .case-meta-wrap { max-width:860px; margin:0 auto; padding:40px 40px 0; }
+    .case-meta { display:flex; flex-wrap:wrap; gap:32px; padding:32px 0; border-top:1px solid var(--border); }
+    .meta-label { font-size:0.6875rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-lighter); margin-bottom:5px; }
+    .meta-value { font-size:0.9375rem; font-weight:500; color:var(--text); }
+
+    /* IMPACT */
+    .impact-banner { background:var(--brand-dark); padding:56px 40px; }
+    .impact-inner { max-width:860px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:40px; }
+    .impact-number { font-family:var(--font-display); font-size:clamp(2.2rem,4vw,3rem); font-weight:700; color:#fff; letter-spacing:-0.03em; line-height:1; margin-bottom:8px; }
+    .impact-number span { color:rgba(255,255,255,0.4); }
+    .impact-label { font-size:0.8125rem; color:rgba(255,255,255,0.45); line-height:1.5; }
+
+    /* CONTENT */
+    .case-section { padding:72px 40px; max-width:860px; margin:0 auto; }
+    .section-label { font-size:0.6875rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--text); margin-bottom:10px; }
+    .section-heading { font-family:var(--font-display); font-size:clamp(1.4rem,2.5vw,1.875rem); font-weight:700; color:var(--text); letter-spacing:-0.02em; line-height:1.25; margin-bottom:24px; }
+    .body-text { font-size:0.9375rem; color:var(--text-light); line-height:1.8; margin-bottom:16px; }
+    .divider { height:1px; background:var(--border); max-width:860px; margin:0 auto; }
+    .highlight-quote { border-left:3px solid var(--brand); padding:18px 22px; margin:28px 0; background:rgba(192,9,42,0.04); border-radius:0 8px 8px 0; }
+    .highlight-quote p { font-family:var(--font-display); font-size:1.0625rem; font-style:italic; color:var(--text); line-height:1.65; }
+
+    /* IMAGE BLOCKS */
+    .img-full { max-width:860px; margin:28px auto; padding:0 40px; }
+    .img-full img { width:100%; display:block; border-radius:10px; border:1px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.07); }
+    .img-full figcaption { font-size:0.75rem; color:var(--text-lighter); margin-top:8px; text-align:center; }
+
+    .img-wide { max-width:1040px; margin:28px auto; padding:0 40px; }
+    .img-wide img { width:100%; display:block; border-radius:10px; border:1px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.07); }
+    .img-wide figcaption { font-size:0.75rem; color:var(--text-lighter); margin-top:8px; text-align:center; }
+
+    .img-2up { max-width:1040px; margin:28px auto; padding:0 40px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .img-2up img { width:100%; display:block; border-radius:10px; border:1px solid var(--border); box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+    .img-2up figcaption { font-size:0.6875rem; color:var(--text-lighter); margin-top:6px; text-align:center; }
+
+    .img-annotated { position:relative; display:block; }
+    .img-annotated img { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+    .img-tag { position:absolute; top:12px; left:12px; background:rgba(154,10,50,0.9); color:#fff; font-size:0.5625rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:4px 10px; border-radius:100px; }
+
+    /* NEED/SOLUTION */
+    .nsblock { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:28px; }
+    .ns-card { padding:24px; border-radius:12px; border:1px solid var(--border); }
+    .ns-card.need { background:var(--bg-alt); }
+    .ns-card.solution { background:#1a1a1a; }
+    .ns-label { font-size:0.625rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:8px; }
+    .ns-card.need .ns-label { color:var(--text-lighter); }
+    .ns-card.solution .ns-label { color:rgba(255,255,255,0.3); }
+    .ns-text { font-size:0.9rem; line-height:1.7; }
+    .ns-card.need .ns-text { color:var(--text-light); }
+    .ns-card.solution .ns-text { color:rgba(255,255,255,0.55); }
+
+    /* FEATURES */
+    .features-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:28px; }
+    .feature-card { padding:22px; border:1px solid var(--border); border-radius:12px; background:var(--bg); }
+    .feature-card.full { grid-column:1/-1; }
+    .feature-head { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+    .feature-icon { font-size:1.25rem; flex-shrink:0; }
+    .feature-title { font-size:0.875rem; font-weight:600; color:var(--text); }
+    .feature-desc { font-size:0.8125rem; color:var(--text-light); line-height:1.65; }
+
+    /* PROCESS */
+    .process-steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:2px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-top:28px; }
+    .process-step { background:var(--bg); padding:22px 18px; }
+    .step-number { font-size:0.6875rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-lighter); margin-bottom:8px; }
+    .step-title { font-family:var(--font-display); font-size:0.9375rem; font-weight:700; color:var(--text); margin-bottom:6px; }
+    .step-desc { font-size:0.8125rem; color:var(--text-light); line-height:1.55; }
+
+    /* OUTCOMES */
+    .outcome-list { display:flex; flex-direction:column; gap:12px; margin-top:24px; }
+    .outcome-item { display:flex; align-items:flex-start; gap:14px; padding:16px 18px; border:1px solid var(--border); border-radius:10px; }
+    .outcome-dot { width:20px; height:20px; border-radius:50%; background:rgba(192,9,42,0.08); border:1px solid rgba(192,9,42,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+    .outcome-dot svg { width:10px; height:10px; }
+    .outcome-text { font-size:0.9375rem; color:var(--text); line-height:1.55; }
+
+    /* ABOUT + MORE */
+    .about-client { padding:60px 40px; background:var(--bg-alt); border-top:1px solid var(--border); }
+    .about-client-inner { max-width:860px; margin:0 auto; display:grid; grid-template-columns:180px 1fr; gap:48px; align-items:start; }
+    .client-logo-box { width:100%; aspect-ratio:3/2; background:#fff; border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:1.1rem; font-weight:700; color:var(--brand); }
+    .about-client-label { font-size:0.625rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--text-lighter); margin-bottom:10px; display:block; }
+    .about-client-name { font-family:var(--font-display); font-size:1.25rem; font-weight:700; color:var(--text); letter-spacing:-0.01em; margin-bottom:14px; }
+    .about-client-text { font-size:0.9rem; color:var(--text-light); line-height:1.75; }
+
+    .more-cases { padding:64px 40px; background:var(--bg); border-top:1px solid var(--border); }
+    .more-cases-inner { max-width:860px; margin:0 auto; }
+    .more-cases-header { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px; }
+    .more-cases-title { font-family:var(--font-display); font-size:1.1rem; font-weight:700; color:var(--text); letter-spacing:-0.01em; }
+    .more-cases-back { font-size:0.8125rem; font-weight:500; color:var(--text-light); text-decoration:none; }
+    .more-cases-back:hover { color:var(--text); }
+    .more-cases-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .more-card { display:block; text-decoration:none; border:1px solid var(--border); border-radius:14px; overflow:hidden; background:var(--bg); transition:transform 0.2s,box-shadow 0.2s; }
+    .more-card:hover { transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,0.08); }
+    .more-card-thumb { height:100px; display:flex; align-items:flex-end; padding:16px 20px; }
+    .more-card-name { font-family:var(--font-display); font-size:1.5rem; font-weight:700; color:#fff; letter-spacing:-0.025em; line-height:1; }
+    .more-card-body { padding:14px 20px 18px; }
+    .more-card-client { font-size:0.6875rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-lighter); margin-bottom:4px; }
+    .more-card-desc { font-size:0.8125rem; color:var(--text-light); line-height:1.55; }
+    .thumb-food { background:linear-gradient(135deg,#1a8c1a,#33CC33); }
+    .thumb-cbre { background:linear-gradient(135deg,#095F34,#1a7a50); }
+
+    footer { padding:28px 40px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    footer p { font-size:0.8125rem; color:var(--text-lighter); }
+    .footer-links { display:flex; gap:20px; }
+    .footer-links a { font-size:0.8125rem; color:var(--text-light); text-decoration:none; }
+    .footer-links a:hover { color:var(--text); }
+
+    @media (max-width:768px) {
+      nav { padding:16px 20px; }
+      .hero-inner, .case-meta-wrap, .case-section, .about-client, .more-cases { padding-left:20px; padding-right:20px; }
+      .hero-screens { grid-template-columns:1fr; padding:20px 20px 0; }
+      .img-full, .img-wide, .img-2up { padding-left:20px; padding-right:20px; }
+      .img-2up, .nsblock, .features-grid, .more-cases-grid { grid-template-columns:1fr; }
+      .feature-card.full { grid-column:1; }
+      .about-client-inner { grid-template-columns:1fr; gap:24px; }
+      .impact-inner { grid-template-columns:1fr 1fr; }
+      footer { flex-direction:column; gap:16px; text-align:center; }
+    }
+    @media (max-width:480px) { .impact-inner { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Back
+  </a>
+  <a href="index.html" class="nav-name">Lucía de la Cruz</a>
+</nav>
+
+<div class="hero-banner">
+  <img class="hero-bg" src="assets/aliseda/01-mockup-desktop.png" alt="" aria-hidden="true" />
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <p class="eyebrow">Aliseda Inmobiliaria</p>
+    <h1>Opening doors — digitally.<br/>An MVP in 10 days.</h1>
+    <p class="hero-desc">A mobile app that lets real estate agents open and manage properties through smart locks — eliminating physical keys, streamlining access, and centralising incident management.</p>
+  </div>
+  <div class="hero-screens">
+    <div class="hscreen">
+      <p class="hscreen-label">Incident control panel</p>
+      <img src="assets/aliseda/03-home-screen.png" alt="Incident control panel dashboard" />
+    </div>
+    <div class="hscreen">
+      <p class="hscreen-label">Incident management</p>
+      <img src="assets/aliseda/06-incident-management.png" alt="Individual incident management" />
+    </div>
+  </div>
+</div>
+
+<div class="case-meta-wrap">
+  <div class="case-meta">
+    <div><p class="meta-label">Role</p><p class="meta-value">UX/UI Designer</p></div>
+    <div><p class="meta-label">Client</p><p class="meta-value">Aliseda Inmobiliaria</p></div>
+    <div><p class="meta-label">Type</p><p class="meta-value">Mobile app · MVP · High-fidelity prototype</p></div>
+    <div><p class="meta-label">Timeline</p><p class="meta-value">10 days</p></div>
+  </div>
+</div>
+
+<div class="impact-banner">
+  <div class="impact-inner">
+    <div><div class="impact-number">10<span>d</span></div><div class="impact-label">From brief to fully validated high-fidelity prototype</div></div>
+    <div><div class="impact-number">0</div><div class="impact-label">Physical keys needed — smart lock integration eliminates key management entirely</div></div>
+    <div><div class="impact-number">3</div><div class="impact-label">Core features: property access, incident reporting, portfolio management</div></div>
+  </div>
+</div>
+
+<div class="case-section">
+  <p class="section-label">Background</p>
+  <h2 class="section-heading">Real estate agents shouldn't<br/>carry a key for every property.</h2>
+  <p class="body-text">Aliseda manages thousands of properties across Spain. Their agents — each handling a portfolio of multiple properties — had to carry physical keys for every one of them. Scheduling viewings, coordinating access, and managing incidents required manual coordination that slowed everything down.</p>
+  <p class="body-text">Aliseda's solution was to install smart locks across its properties. The design challenge was building the app that would make those locks actually useful — giving agents digital access, incident management, and portfolio visibility in a single tool.</p>
+  <div class="highlight-quote">
+    <p>"A minimum viable product designed in 10 days that covers all the needs of the client — from digital property access to incident management and portfolio control."</p>
+  </div>
+  <div class="nsblock">
+    <div class="ns-card need">
+      <p class="ns-label">The need</p>
+      <p class="ns-text">An app that allows real estate agents to open and close properties digitally, report problems to the technical team, and monitor nearby properties in their available portfolio.</p>
+    </div>
+    <div class="ns-card solution">
+      <p class="ns-label">The solution</p>
+      <p class="ns-text">A focused MVP covering all three needs — delivered as a high-fidelity prototype in 10 days, validated against the development team's technical requirements.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Desktop mockup in context -->
+<figure class="img-wide">
+  <img src="assets/aliseda/01-mockup-desktop.png" alt="Aliseda app — desktop mockup in real context" />
+  <figcaption>Incident control panel — desktop view in real context</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Process</p>
+  <h2 class="section-heading">10 days.<br/>Zero shortcuts.
+Every decision intentional.</h2>
+  <p class="body-text">The project required a thorough review of information architecture and user flows before any visual design began — ensuring the prototype was both technically feasible and genuinely usable by agents in the field.</p>
+  <div class="process-steps">
+    <div class="process-step"><div class="step-number">01</div><div class="step-title">IA review</div><div class="step-desc">Information architecture restructured around the three core agent needs.</div></div>
+    <div class="process-step"><div class="step-number">02</div><div class="step-title">User flows</div><div class="step-desc">Key flows designed for property access, incident reporting, and portfolio browsing.</div></div>
+    <div class="process-step"><div class="step-number">03</div><div class="step-title">High-fi prototype</div><div class="step-desc">Full high-fidelity prototype built — production-ready designs from day one.</div></div>
+    <div class="process-step"><div class="step-number">04</div><div class="step-title">Dev validation</div><div class="step-desc">Prototype validated against development team requirements to ensure MVP feasibility.</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Incident control panel</p>
+  <h2 class="section-heading">A real-time dashboard<br/>for incident management.</h2>
+  <p class="body-text">The home screen gives agents an immediate global view of all incidents — categorised by status (unresolved, pending, open, unassigned) and type (missing keys, water alerts, lock failures, occupancy warnings). Real-time charts show volume by week and severity distribution.</p>
+</div>
+
+<figure class="img-full">
+  <img src="assets/aliseda/03-home-screen.png" alt="Incident panel — global view with stats and charts" />
+  <figcaption>Home screen — global incident overview with status breakdown and analytics</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Core features</p>
+  <h2 class="section-heading">Three screens.
+Every agent need covered.<br/>Every agent need covered.</h2>
+</div>
+
+<div class="img-2up">
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/aliseda/04-incident-registration.png" alt="Incident registration screen" />
+      <span class="img-tag">Register incident</span>
+    </div>
+    <figcaption>Incident registration — type, priority, channel, description, and assignment in one form</figcaption>
+  </figure>
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/aliseda/05-incident-panel.png" alt="General incident panel" />
+      <span class="img-tag">Incident panel</span>
+    </div>
+    <figcaption>General incident view — filterable list with priority colour coding and assignment</figcaption>
+  </figure>
+</div>
+
+<figure class="img-full">
+  <img src="assets/aliseda/06-incident-management.png" alt="Individual incident management screen" />
+  <figcaption>Incident detail — full context, contact info, status management and response directly in app</figcaption>
+</figure>
+
+<!-- Mobile mockup -->
+<figure class="img-full" style="max-width:500px; margin:28px auto; padding:0 40px;">
+  <img src="assets/aliseda/02-mockup-mobile.png" alt="Aliseda app — mobile mockup" />
+  <figcaption>Mobile view — optimised for field use by agents on the go</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Outcomes</p>
+  <h2 class="section-heading">Faster access.
+Fewer keys.
+Better incident response. Fewer keys.<br/>Better incident response.</h2>
+  <div class="outcome-list">
+    <div class="outcome-item">
+      <div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div>
+      <p class="outcome-text">Physical key management eliminated entirely — agents access every property in their portfolio digitally, reducing friction before every viewing.</p>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div>
+      <p class="outcome-text">Fully validated high-fidelity prototype delivered in 10 days — covering all three client requirements without scope reduction.</p>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div>
+      <p class="outcome-text">Incident communication centralised in the app — agents report and track problems directly, without needing separate communication channels.</p>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div>
+      <p class="outcome-text">Smart technology successfully integrated into traditional real estate workflows — demonstrating that digital solutions can enhance efficiency without disrupting familiar processes.</p>
+    </div>
+  </div>
+</div>
+
+<div class="about-client">
+  <div class="about-client-inner">
+    <div class="client-logo-box">Aliseda</div>
+    <div>
+      <span class="about-client-label">About the client</span>
+      <p class="about-client-name">Aliseda Inmobiliaria</p>
+      <p class="about-client-text">Aliseda Inmobiliaria is a real estate company specialised in asset and real estate credit management, with a strong presence across Europe. The company holds thousands of assets for sale — including primary and secondary residences, offices, commercial spaces, warehouses, land, and parking spaces. With a vision to become a leader in real estate business management, Aliseda is grounded in values of honesty, teamwork, and excellence in service.</p>
+    </div>
+  </div>
+</div>
+
+<div class="more-cases">
+  <div class="more-cases-inner">
+    <div class="more-cases-header">
+      <p class="more-cases-title">More case studies</p>
+      <a href="index.html" class="more-cases-back">← Back to all work</a>
+    </div>
+    <div class="more-cases-grid">
+      <a href="foodizon.html" class="more-card">
+        <div class="more-card-thumb thumb-food"><span class="more-card-name">Foodizon</span></div>
+        <div class="more-card-body"><p class="more-card-client">Foodizon</p><p class="more-card-desc">The first AI platform that prevents food waste in commercial kitchens.</p></div>
+      </a>
+      <a href="cbre.html" class="more-card">
+        <div class="more-card-thumb thumb-cbre"><span class="more-card-name">Commute Analyzer</span></div>
+        <div class="more-card-body"><p class="more-card-client">CBRE</p><p class="more-card-desc">Turning complex commute data into confident decisions.</p></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Lucía de la Cruz</p>
+  <div class="footer-links">
+    <a href="mailto:luciadcr8@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/lucia-de-la-cruz-rodriguez/" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+</body>
+</html>

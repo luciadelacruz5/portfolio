@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Madrid Digital — Lucía de la Cruz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noticia+Text:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--text:#454545;--text-light:#888;--text-lighter:#bbb;--bg:#fff;--bg-alt:#F3F3F3;--border:#e8e8e8;--brand:#BF0000;--brand-dark:#8B0000;--font-display:'Noticia Text',serif;--font-body:'Noto Sans',sans-serif}
+    html,body{font-family:var(--font-body);color:var(--text);background:var(--bg);overflow-x:hidden}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav-back{display:flex;align-items:center;gap:8px;font-size:0.8125rem;font-weight:500;color:var(--text-light);text-decoration:none}
+    .nav-back:hover{color:var(--text)}
+    .nav-name{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);text-decoration:none}
+    .hero-banner{width:100%;margin-top:61px;position:relative;overflow:hidden;background:var(--brand-dark);min-height:520px;display:flex;flex-direction:column}
+    .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.22}
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(139,0,0,0.97) 0%,rgba(139,0,0,0.82) 45%,rgba(139,0,0,0.6) 100%)}
+    .hero-inner{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:72px 40px 28px}
+    .eyebrow{font-size:0.7rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:12px}
+    .hero-inner h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;color:#fff;letter-spacing:-0.025em;line-height:1.15;margin-bottom:16px}
+    .hero-inner .hero-desc{font-size:1rem;color:rgba(255,255,255,0.6);line-height:1.7;max-width:520px;font-weight:300;margin-bottom:24px}
+    .hero-logos{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:0 40px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .hero-logo-item{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:6px;padding:6px 14px;font-family:var(--font-display);font-size:0.8125rem;font-weight:700;color:rgba(255,255,255,0.65);white-space:nowrap}
+    .hero-screens{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:24px 40px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end}
+    .hscreen{border-radius:8px 8px 0 0;overflow:hidden;border:1px solid rgba(255,255,255,0.12);border-bottom:none}
+    .hscreen-label{font-size:0.5625rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);padding:6px 10px;background:rgba(0,0,0,0.2)}
+    .hscreen img{width:100%;display:block;object-fit:cover;object-position:top;max-height:240px}
+    .case-meta-wrap{max-width:860px;margin:0 auto;padding:40px 40px 0}
+    .case-meta{display:flex;flex-wrap:wrap;gap:32px;padding:32px 0;border-top:1px solid var(--border)}
+    .meta-label{font-size:0.6875rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:5px}
+    .meta-value{font-size:0.9375rem;font-weight:500;color:var(--text)}
+    .impact-banner{background:var(--brand-dark);padding:56px 40px}
+    .impact-inner{max-width:860px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+    .impact-number{font-family:var(--font-display);font-size:clamp(2.2rem,4vw,3rem);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1;margin-bottom:8px}
+    .impact-number span{color:rgba(255,255,255,0.4)}
+    .impact-label{font-size:0.8125rem;color:rgba(255,255,255,0.45);line-height:1.5}
+    .case-section{padding:72px 40px;max-width:860px;margin:0 auto}
+    .section-label{font-size:0.6875rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text);margin-bottom:10px}
+    .section-heading{font-family:var(--font-display);font-size:clamp(1.4rem,2.5vw,1.875rem);font-weight:700;color:var(--text);letter-spacing:-0.02em;line-height:1.25;margin-bottom:24px}
+    .body-text{font-size:0.9375rem;color:var(--text-light);line-height:1.8;margin-bottom:16px}
+    .divider{height:1px;background:var(--border);max-width:860px;margin:0 auto}
+    .highlight-quote{border-left:3px solid var(--brand);padding:18px 22px;margin:28px 0;background:rgba(191,0,0,0.04);border-radius:0 8px 8px 0}
+    .highlight-quote p{font-family:var(--font-display);font-size:1.0625rem;font-style:italic;color:var(--text);line-height:1.65}
+    .img-full{max-width:860px;margin:28px auto;padding:0 40px}
+    .img-full img{width:100%;display:block;border-radius:10px;border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.07)}
+    .img-full figcaption{font-size:0.75rem;color:var(--text-lighter);margin-top:8px;text-align:center}
+    .img-wide{max-width:1040px;margin:28px auto;padding:0 40px}
+    .img-wide img{width:100%;display:block;border-radius:10px;border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.07)}
+    .img-wide figcaption{font-size:0.75rem;color:var(--text-lighter);margin-top:8px;text-align:center}
+    .img-2up{max-width:1040px;margin:28px auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .img-2up img{width:100%;display:block;border-radius:10px;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+    .img-2up figcaption{font-size:0.6875rem;color:var(--text-lighter);margin-top:6px;text-align:center}
+    /* Carnet Joven block */
+    .cj-banner{max-width:860px;margin:28px auto;padding:0 40px}
+    .cj-header{background:linear-gradient(135deg,#8B0000,#BF0000);border-radius:14px 14px 0 0;padding:28px 32px;display:flex;align-items:flex-start;gap:24px;position:relative;overflow:hidden}
+    .cj-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 80% 30%,rgba(255,100,100,0.2) 0%,transparent 60%)}
+    .cj-badge{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:12px 18px;flex-shrink:0;position:relative;z-index:1;font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:#fff;text-align:center;min-width:90px}
+    .cj-badge small{display:block;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:2px;font-family:var(--font-body)}
+    .cj-header-text{position:relative;z-index:1}
+    .cj-header-text h3{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:#fff;letter-spacing:-0.01em;margin-bottom:6px}
+    .cj-header-text p{font-size:0.875rem;color:rgba(255,255,255,0.6);line-height:1.55}
+    .cj-stats{display:grid;grid-template-columns:repeat(3,1fr)}
+    .cj-stat{background:var(--bg-alt);border:1px solid var(--border);border-top:none;padding:18px 20px}
+    .cj-stat:not(:last-child){border-right:none}
+    .cj-stat:last-child{border-radius:0 0 14px 0}
+    .cj-stat:first-child{border-radius:0 0 0 14px}
+    .cj-stat-n{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;margin-bottom:3px}
+    .cj-stat-l{font-size:0.75rem;color:var(--text-light);line-height:1.45}
+    /* UX flow */
+    .ux-flow{display:flex;gap:0;margin-top:28px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .ux-step{flex:1;padding:20px 16px;background:var(--bg);border-right:1px solid var(--border)}
+    .ux-step:last-child{border-right:none}
+    .ux-step-n{font-size:0.5625rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:7px}
+    .ux-step-title{font-family:var(--font-display);font-size:0.875rem;font-weight:700;color:var(--text);margin-bottom:6px}
+    .ux-step-desc{font-size:0.75rem;color:var(--text-light);line-height:1.55}
+    .ux-step.highlight{background:rgba(191,0,0,0.03)}
+    .ux-step.highlight .ux-step-title{color:var(--brand)}
+    /* before after */
+    .before-after{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+    .ba-card{border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .ba-label{padding:10px 16px;font-size:0.6875rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase}
+    .ba-label.before{background:#fff3f3;color:#c0392b;border-bottom:1px solid #fad7d7}
+    .ba-label.after{background:rgba(191,0,0,0.04);color:var(--brand);border-bottom:1px solid rgba(191,0,0,0.12)}
+    .ba-content{padding:20px;background:var(--bg-alt)}
+    .ba-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:0.875rem;color:var(--text-light);line-height:1.5;border-bottom:1px solid var(--border)}
+    .ba-item:last-child{border-bottom:none}
+    .ba-icon{flex-shrink:0;margin-top:1px}
+    /* outcomes */
+    .outcome-list{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+    .outcome-item{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border:1px solid var(--border);border-radius:10px}
+    .outcome-dot{width:20px;height:20px;border-radius:50%;background:rgba(191,0,0,0.08);border:1px solid rgba(191,0,0,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .outcome-dot svg{width:10px;height:10px}
+    .outcome-text{font-size:0.9375rem;color:var(--text);line-height:1.55}
+    .about-client{padding:60px 40px;background:var(--bg-alt);border-top:1px solid var(--border)}
+    .about-client-inner{max-width:860px;margin:0 auto;display:grid;grid-template-columns:180px 1fr;gap:48px;align-items:start}
+    .client-logo-box{width:100%;aspect-ratio:3/2;background:#fff;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.875rem;font-weight:700;color:var(--brand);text-align:center;padding:10px;line-height:1.3}
+    .about-client-label{font-size:0.625rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:10px;display:block}
+    .about-client-name{font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:-0.01em;margin-bottom:14px}
+    .about-client-text{font-size:0.9rem;color:var(--text-light);line-height:1.75}
+    .more-cases{padding:64px 40px;background:var(--bg);border-top:1px solid var(--border)}
+    .more-cases-inner{max-width:860px;margin:0 auto}
+    .more-cases-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:28px}
+    .more-cases-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);letter-spacing:-0.01em}
+    .more-cases-back{font-size:0.8125rem;font-weight:500;color:var(--text-light);text-decoration:none}
+    .more-cases-back:hover{color:var(--text)}
+    .more-cases-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .more-card{display:block;text-decoration:none;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg);transition:transform 0.2s,box-shadow 0.2s}
+    .more-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.08)}
+    .more-card-thumb{height:100px;display:flex;align-items:flex-end;padding:16px 20px}
+    .more-card-name{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:#fff;letter-spacing:-0.025em;line-height:1}
+    .more-card-body{padding:14px 20px 18px}
+    .more-card-client{font-size:0.6875rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:4px}
+    .more-card-desc{font-size:0.8125rem;color:var(--text-light);line-height:1.55}
+    .thumb-cbre{background:linear-gradient(135deg,#095F34,#1a7a50)}
+    .thumb-resp{background:linear-gradient(135deg,#4a6b28,#748F48)}
+    footer{padding:28px 40px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    footer p{font-size:0.8125rem;color:var(--text-lighter)}
+    .footer-links{display:flex;gap:20px}
+    .footer-links a{font-size:0.8125rem;color:var(--text-light);text-decoration:none}
+    .footer-links a:hover{color:var(--text)}
+    @media(max-width:768px){
+      nav{padding:16px 20px}
+      .hero-inner,.hero-logos,.case-meta-wrap,.case-section,.cj-banner,.about-client,.more-cases{padding-left:20px;padding-right:20px}
+      .hero-screens{grid-template-columns:1fr;padding:20px 20px 0}
+      .img-full,.img-wide,.img-2up{padding-left:20px;padding-right:20px}
+      .img-2up,.before-after,.more-cases-grid{grid-template-columns:1fr}
+      .ux-flow{flex-direction:column}
+      .ux-step{border-right:none;border-bottom:1px solid var(--border)}
+      .ux-step:last-child{border-bottom:none}
+      .cj-stats{grid-template-columns:1fr}
+      .cj-stat:not(:last-child){border-right:1px solid var(--border);border-bottom:none}
+      .impact-inner{grid-template-columns:1fr 1fr}
+      .about-client-inner{grid-template-columns:1fr;gap:24px}
+      footer{flex-direction:column;gap:16px;text-align:center}
+    }
+    @media(max-width:480px){.impact-inner{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>Back</a>
+  <a href="index.html" class="nav-name">Lucía de la Cruz</a>
+</nav>
+
+<div class="hero-banner">
+  <img class="hero-bg" src="assets/madrid/00-mockup-desktop.png" alt="" aria-hidden="true" />
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <p class="eyebrow">Comunidad de Madrid · Madrid Digital</p>
+    <h1>Redesigning public services<br/>for 6.8 million people</h1>
+    <p class="hero-desc">End-to-end UX/UI redesign of the Comunidad de Madrid digital ecosystem — from research workshops with public administration to a live platform serving millions of citizens across 220+ services.</p>
+  </div>
+  <div class="hero-logos">
+    <div class="hero-logo-item">Comunidad de Madrid</div>
+    <div class="hero-logo-item">Madrid Digital</div>
+    <div class="hero-logo-item">Cuenta Digital</div>
+    <div class="hero-logo-item">Carnet Joven</div>
+    <div class="hero-logo-item">Administración Digital</div>
+  </div>
+  <div class="hero-screens">
+    <div class="hscreen">
+      <p class="hscreen-label">Cuenta Digital — mobile welcome</p>
+      <img src="assets/madrid/01-mockup.jpg" alt="Cuenta Digital — mobile welcome screen" />
+    </div>
+    <div class="hscreen">
+      <p class="hscreen-label">Cuenta Digital — app in context</p>
+      <img src="assets/madrid/10-cuenta-digital-lifestyle.jpg" alt="Cuenta Digital app in real use" />
+    </div>
+  </div>
+</div>
+
+<div class="case-meta-wrap">
+  <div class="case-meta">
+    <div><p class="meta-label">Role</p><p class="meta-value">UX/UI Designer</p></div>
+    <div><p class="meta-label">Client</p><p class="meta-value">Madrid Digital — Comunidad de Madrid</p></div>
+    <div><p class="meta-label">Type</p><p class="meta-value">Public sector · End-to-end redesign</p></div>
+    <div><p class="meta-label">Status</p><p class="meta-value">Live at comunidad.madrid</p></div>
+  </div>
+</div>
+
+<div class="impact-banner">
+  <div class="impact-inner">
+    <div><div class="impact-number">10<span>M</span></div><div class="impact-label">Annual accesses to Cuenta Digital in 2025</div></div>
+    <div><div class="impact-number">220<span>+</span></div><div class="impact-label">Digital services now available to citizens</div></div>
+    <div><div class="impact-number">1<span>M+</span></div><div class="impact-label">Citizens registered on Cuenta Digital</div></div>
+  </div>
+</div>
+
+<div class="case-section">
+  <p class="section-label">Background</p>
+  <h2 class="section-heading">A region trying to become<br/>Europe's digital benchmark.</h2>
+  <p class="body-text">Madrid Digital is the agency responsible for the digital transformation of the Comunidad de Madrid — one of Spain's largest regional administrations, serving over 6.8 million people across healthcare, education, housing, employment, and more.8 million people across healthcare, education, housing, employment, and more.</p>
+  <p class="body-text">The challenge was not just visual. Citizens were navigating a fragmented landscape of outdated services, inconsistent interfaces, and bureaucratic friction. The redesign had to be technically feasible and genuinely usable for a population with vastly different digital literacy levels.</p>
+  <div class="highlight-quote">
+    <p>"Ser la Administración Digital referente en la prestación de servicios públicos digitales." — Madrid Digital Vision Statement</p>
+  </div>
+</div>
+
+<!-- Descubre Cuenta Digital -->
+<figure class="img-wide">
+  <img src="assets/madrid/04-descubre-cuenta-digital.png" alt="Descubre la nueva Cuenta Digital — campaign visual" />
+  <figcaption>Cuenta Digital launch campaign — "Descubre la nueva Cuenta Digital de la Comunidad de Madrid"</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Cuenta Digital — onboarding</p>
+  <h2 class="section-heading">From registration to<br/>personalised citizen space.</h2>
+  <p class="body-text">The onboarding flow was one of the most critical UX challenges — connecting citizens to their digital identity (IDentifica), setting up their personalised space, and surfacing relevant services immediately. The design had to work for first-time digital users as well as experienced ones.</p>
+</div>
+
+<div class="img-2up">
+  <figure>
+    <img src="assets/madrid/06-pantallas-crear-cuenta.jpg" alt="Cuenta Digital — account creation screens" />
+    <figcaption>Account creation — registration, IDentifica verification, and personalisation flow</figcaption>
+  </figure>
+  <figure>
+    <img src="assets/madrid/09-inicio-screens.webp" alt="Cuenta Digital — home screens" />
+    <figcaption>Home screen — personalised citizen space with active procedures and recommended services</figcaption>
+  </figure>
+</div>
+
+<!-- Lifestyle image -->
+<figure class="img-wide">
+  <img src="assets/madrid/10-cuenta-digital-lifestyle.jpg" alt="Cuenta Digital — app in real use context" />
+  <figcaption>Cuenta Digital — used daily by millions of citizens to manage their public procedures</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<!-- Carnet Joven deep dive -->
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">UX process</p>
+  <h2 class="section-heading">Research across the full chain —<br/>citizens, civil servants, and managers.</h2>
+  <p class="body-text">The redesign was grounded in research conducted at every level of the administration — from front-line civil servants processing daily requests, to technical teams managing back-end workflows, to department heads defining service requirements. Understanding the full chain was essential: a citizen-facing improvement that creates friction for the gestores managing it isn't a real improvement.</p>
+  <p class="body-text">Research sessions included structured interviews with funcionarios, técnicos, and jefes de servicio across multiple departments. Each group had different pain points, different technical constraints, and different definitions of what "working" looked like — reconciling those perspectives into a single coherent design direction was the core design challenge.</p>
+</div>
+
+<div class="case-section" style="padding-top:0;">
+  <p class="section-label">UX process — forms & document submission</p>
+  <h2 class="section-heading">Redesigning the forms citizens<br/>and gestores use every day.</h2>
+  <p class="body-text">Existing forms had accumulated years of legacy requirements — mandatory fields that no longer served a purpose, document upload flows with unclear error states, and step structures that didn't match how users actually approached the task. The redesign was a systematic audit and rebuild of the existing form library, not a visual refresh.</p>
+  <p class="body-text">Key changes across the form system:</p>
+</div>
+
+<div style="max-width:860px;margin:-40px auto 0;padding:0 40px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:56px;">
+    <div style="padding:22px;border:1px solid var(--border);border-radius:12px;background:var(--bg-alt);">
+      <p style="font-size:0.625rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:12px;">Citizen side</p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+        <li style="font-size:0.875rem;color:var(--text-light);line-height:1.55;display:flex;gap:10px;"><span style="color:var(--brand);flex-shrink:0;">→</span>Progressive disclosure — only show fields relevant to the citizen's specific situation</li>
+        <li style="font-size:0.875rem;color:var(--text-light);line-height:1.55;display:flex;gap:10px;"><span style="color:var(--brand);flex-shrink:0;">→</span>Inline validation with clear, actionable error messages in plain language</li>
+        <li style="font-size:0.875rem;color:var(--text-light);line-height:1.55;display:flex;gap:10px;"><span style="color:var(--brand);flex-shrink:0;">→</span>Document upload redesigned with accepted formats, size limits, and preview before submission</li>
+        <li style="font-size:0.875rem;color:var(--text-light);line-height:1.55;display:flex;gap:10px;"><span style="color:var(--brand);flex-shrink:0;">→</span>Draft saving — citizens can pause and resume without losing progress</li>
+      </ul>
+    </div>
+    <div style="padding:22px;border:1px solid var(--border);border-radius:12px;background:var(--bg-alt);">
+      <p style="font-size:0.625rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-lighter);margin-bottom:12px;">Gestor side</p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+        <li style="font-size:0.875rem;color:var(--text-light);line-height:1.55;display:flex;gap:10px;"><span style="color:var(--brand);flex-shrink:0;">→</span>Unified review interface — all submitted documents and form data visible in a single panel</li>
+        <li style="font-size:0.875rem;color:var(--text-light);line-height:1.55;display:flex;gap:10px;"><span style="color:var(--brand);flex-shrink:0;">→</span>Structured request-for-additional-documentation flow with citizen-facing status update</li>
+        <li style="font-size:0.875rem;color:var(--text-light);line-height:1.55;display:flex;gap:10px;"><span style="color:var(--brand);flex-shrink:0;">→</span>Annotation tools for internal comments without affecting the citizen-visible record</li>
+        <li style="font-size:0.875rem;color:var(--text-light);line-height:1.55;display:flex;gap:10px;"><span style="color:var(--brand);flex-shrink:0;">→</span>Batch processing for high-volume routine requests</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">UX process — notifications & resolutions</p>
+  <h2 class="section-heading">Closing the loop between<br/>administration and citizen.</h2>
+  <p class="body-text">One of the most consistent findings across all research sessions — with citizens and gestores alike — was the breakdown in communication at critical moments: when a procedure was received, when additional documentation was needed, and when a resolution had been issued. Citizens had no visibility into where their request stood. Gestores had no reliable way to reach them.</p>
+  <p class="body-text">The notification system was redesigned end-to-end, covering both the citizen experience in Cuenta Digital and the tools gestores use to trigger and manage communications:</p>
+
+  <div style="display:flex;flex-direction:column;gap:4px;margin-top:24px;">
+    <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:8px;border:1px solid transparent;font-size:0.9rem;color:var(--text);">
+      <span style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;color:var(--text-lighter);width:28px;flex-shrink:0;">01</span>
+      <span><strong style="font-weight:600;">Real-time status tracking</strong> — citizens can see the live status of every active procedure directly in Cuenta Digital, without needing to call or visit an office</span>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:8px;border:1px solid transparent;font-size:0.9rem;color:var(--text);">
+      <span style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;color:var(--text-lighter);width:28px;flex-shrink:0;">02</span>
+      <span><strong style="font-weight:600;">Push and email notifications</strong> — triggered automatically at key moments (received, under review, additional documentation needed, resolved) with plain-language content written specifically for each state</span>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:8px;border:1px solid transparent;font-size:0.9rem;color:var(--text);">
+      <span style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;color:var(--text-lighter);width:28px;flex-shrink:0;">03</span>
+      <span><strong style="font-weight:600;">Resolution delivery</strong> — final resolutions delivered directly in Cuenta Digital with clear next-step guidance, reducing dependency on postal notification for the majority of procedures</span>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:8px;border:1px solid transparent;font-size:0.9rem;color:var(--text);">
+      <span style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;color:var(--text-lighter);width:28px;flex-shrink:0;">04</span>
+      <span><strong style="font-weight:600;">Gestor notification tools</strong> — structured templates for the most common communication types, reducing inconsistency in how the administration communicates with citizens across different departments</span>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:8px;border:1px solid transparent;font-size:0.9rem;color:var(--text);">
+      <span style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;color:var(--text-lighter);width:28px;flex-shrink:0;">05</span>
+      <span><strong style="font-weight:600;">Accessible notification centre</strong> — all communications stored and searchable in one place within Cuenta Digital, replacing the fragmented email + letter + phone system that existed before</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+
+<div class="case-section">
+  <p class="section-label">Featured service redesign</p>
+  <h2 class="section-heading">Carnet Joven — from physical card<br/>to integrated digital service.</h2>
+  <p class="body-text">Among the 220+ services redesigned, the Carnet Joven digitisation stands out as a case study within the case study. It required rethinking not just an interface, but an entire service model — translating a physical card with 30+ years of history into a native digital experience integrated within Cuenta Digital.</p>
+</div>
+
+<div class="cj-banner">
+  <div class="cj-header">
+    <div class="cj-badge"><small>Carnet</small>Joven</div>
+    <div class="cj-header-text">
+      <h3>Carnet Joven — Comunidad de Madrid</h3>
+      <p>A free youth card giving 14–30 year olds access to discounts and benefits across 2,000+ partner organisations in Madrid, Spain, and 37 European countries.</p>
+    </div>
+  </div>
+  <div class="cj-stats">
+    <div class="cj-stat"><p class="cj-stat-n">606<span style="font-size:1.1rem;color:var(--text-light)">K</span></p><p class="cj-stat-l">Young people holding the card in Madrid</p></div>
+    <div class="cj-stat"><p class="cj-stat-n">2,000<span style="font-size:1.1rem;color:var(--text-light)">+</span></p><p class="cj-stat-l">Partner organisations offering discounts</p></div>
+    <div class="cj-stat"><p class="cj-stat-n">37</p><p class="cj-stat-l">European countries with youth card reciprocity</p></div>
+  </div>
+</div>
+
+<!-- Carnet Joven image -->
+<figure class="img-full">
+  <img src="assets/madrid/08-carnet-joven-card.png" alt="Carnet Joven — digital card on mobile and physical card" />
+  <figcaption>Carnet Joven — digital card integrated in Cuenta Digital alongside the physical card format</figcaption>
+</figure>
+
+<div class="case-section" style="padding-top:0;">
+  <p class="section-label">Carnet Joven — 4 journeys redesigned</p>
+  <h2 class="section-heading">From office visit<br/>to one tap in the app.</h2>
+  <div class="ux-flow">
+    <div class="ux-step"><p class="ux-step-n">Journey 01</p><p class="ux-step-title">Discovery</p><p class="ux-step-desc">Find the card, understand benefits, and get motivated — without leaving Cuenta Digital.</p></div>
+    <div class="ux-step highlight"><p class="ux-step-n">Journey 02</p><p class="ux-step-title">Application</p><p class="ux-step-desc">Full digital application via Cuenta Digital, verified with IDentifica. No bank branch visit.</p></div>
+    <div class="ux-step highlight"><p class="ux-step-n">Journey 03</p><p class="ux-step-title">Card management</p><p class="ux-step-desc">Digital card lives permanently in the Tarjetero. Renewal and replacement in one tap.</p></div>
+    <div class="ux-step"><p class="ux-step-n">Journey 04</p><p class="ux-step-title">Benefit discovery</p><p class="ux-step-desc">Geolocated, personalised offers surfaced in-app — Parque de Atracciones, Warner, Faunia and 2,000+ more.</p></div>
+  </div>
+
+  <div class="before-after" style="margin-top:28px;">
+    <div class="ba-card">
+      <div class="ba-label before">Before — physical era</div>
+      <div class="ba-content">
+        <div class="ba-item"><span class="ba-icon">❌</span>Application required visiting a bank branch or youth office</div>
+        <div class="ba-item"><span class="ba-icon">❌</span>Card was physical — losable, forgettable, not always carried</div>
+        <div class="ba-item"><span class="ba-icon">❌</span>Benefits listed on a separate, non-personalised website</div>
+        <div class="ba-item"><span class="ba-icon">❌</span>No integration with any Comunidad de Madrid digital account</div>
+      </div>
+    </div>
+    <div class="ba-card">
+      <div class="ba-label after">After — Cuenta Digital</div>
+      <div class="ba-content">
+        <div class="ba-item"><span class="ba-icon">✓</span>Full digital application via Cuenta Digital, verified with IDentifica</div>
+        <div class="ba-item"><span class="ba-icon">✓</span>Card lives in the Tarjetero — always available, never forgotten</div>
+        <div class="ba-item"><span class="ba-icon">✓</span>Geolocated, personalised offers built into the app</div>
+        <div class="ba-item"><span class="ba-icon">✓</span>Single account integrates card, benefits, and all Madrid services</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="case-section">
+  <p class="section-label">Outcomes</p>
+  <h2 class="section-heading">A digital administration<br/>citizens actually use.</h2>
+  <div class="outcome-list">
+    <div class="outcome-item"><div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div><p class="outcome-text">Cuenta Digital reached nearly 10 million accesses in 2025 — with over 220 digital services available, including the newly integrated Carnet Joven.</p></div>
+    <div class="outcome-item"><div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div><p class="outcome-text">218,000 public employees use the redesigned systems daily — across healthcare, education, justice, and housing.</p></div>
+    <div class="outcome-item"><div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div><p class="outcome-text">Digital Strategy 98.98.4% of the Digital Strategy was executed ahead of schedule, with the design work cited as a key enabler of delivery speed.</p></div>
+    <div class="outcome-item"><div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div><p class="outcome-text">Carnet Joven new registrations grew 7.8% year-on-year following the digital launch. Cuenta Digital awarded Premio Innovaics 2025.</p></div>
+  </div>
+</div>
+
+<div class="about-client">
+  <div class="about-client-inner">
+    <div class="client-logo-box">Madrid<br/>Digital</div>
+    <div>
+      <span class="about-client-label">About the client</span>
+      <p class="about-client-name">Madrid Digital — Comunidad de Madrid</p>
+      <p class="about-client-text">Madrid Digital is the digital transformation agency of the Comunidad de Madrid — one of Spain's largest regional governments, serving over 6.8 million people.8 million people. It is responsible for the digitisation of all public services across the region, spanning healthcare, education, housing, employment, taxation, and justice. In 2025 it was recognised as Spain's leading example of innovative public administration.</p>
+    </div>
+  </div>
+</div>
+
+<div class="more-cases">
+  <div class="more-cases-inner">
+    <div class="more-cases-header">
+      <p class="more-cases-title">More case studies</p>
+      <a href="index.html" class="more-cases-back">← Back to all work</a>
+    </div>
+    <div class="more-cases-grid">
+      <a href="cbre.html" class="more-card">
+        <div class="more-card-thumb thumb-cbre"><span class="more-card-name">Commute Analyzer</span></div>
+        <div class="more-card-body"><p class="more-card-client">CBRE</p><p class="more-card-desc">Turning complex commute data into confident decisions.</p></div>
+      </a>
+      <a href="respirapp.html" class="more-card">
+        <div class="more-card-thumb thumb-resp"><span class="more-card-name">Respirapp</span></div>
+        <div class="more-card-body"><p class="more-card-client">AECC</p><p class="more-card-desc">Helping people quit smoking through better design.</p></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Lucía de la Cruz</p>
+  <div class="footer-links">
+    <a href="mailto:luciadcr8@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/lucia-de-la-cruz-rodriguez/" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+</body>
+</html>

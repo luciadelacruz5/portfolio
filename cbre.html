@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CBRE Commute Analyzer — Lucía de la Cruz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noticia+Text:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #51FFA1;
+      --accent-dim: rgba(81,255,161,0.10);
+      --accent-mid: rgba(81,255,161,0.30);
+      --text: #454545; --text-light: #888; --text-lighter: #bbb;
+      --bg: #ffffff; --bg-alt: #F3F3F3; --border: #e8e8e8;
+      --brand: #095F34; --brand-dark: #063d22;
+      --font-display: 'Noticia Text', serif; --font-body: 'Noto Sans', sans-serif;
+    }
+
+    html, body { font-family: var(--font-body); color: var(--text); background: var(--bg); overflow-x: hidden; }
+
+    /* NAV */
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:20px 40px; background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); }
+    .nav-back { display:flex; align-items:center; gap:8px; font-size:0.8125rem; font-weight:500; color:var(--text-light); text-decoration:none; transition:color 0.2s; }
+    .nav-back:hover { color:var(--text); }
+    .nav-name { font-family:var(--font-display); font-size:1rem; font-weight:700; color:var(--text); text-decoration:none; }
+
+    /* HERO — full-width landing screenshot as bg */
+    .hero-banner {
+      width:100%; margin-top:61px; position:relative; overflow:hidden;
+      background:var(--brand-dark); min-height:480px; display:flex; flex-direction:column;
+    }
+
+    .hero-bg {
+      position:absolute; inset:0; width:100%; height:100%;
+      object-fit:cover; object-position:top center; opacity:0.18;
+    }
+
+    .hero-overlay {
+      position:absolute; inset:0;
+      background: linear-gradient(to right, rgba(6,61,34,0.95) 0%, rgba(6,61,34,0.80) 45%, rgba(6,61,34,0.55) 100%),
+                  radial-gradient(ellipse 50% 80% at 5% 85%, rgba(0,20,10,0.6) 0%, transparent 55%);
+    }
+
+    .hero-inner { position:relative; z-index:2; max-width:860px; margin:0 auto; padding:72px 40px 32px; flex:1; }
+    .hero-inner .eyebrow { font-size:0.7rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:12px; }
+    .hero-inner h1 { font-family:var(--font-display); font-size:clamp(2rem,5vw,3.2rem); font-weight:700; color:#fff; letter-spacing:-0.025em; line-height:1.15; margin-bottom:16px; }
+    .hero-inner .hero-desc { font-size:1rem; color:rgba(255,255,255,0.6); line-height:1.7; max-width:500px; margin-bottom:0; font-weight:300; }
+
+    /* Hero 3-up screens */
+    .hero-screens {
+      position:relative; z-index:2;
+      max-width:1000px; margin:0 auto; padding:28px 40px 0;
+      display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:10px; align-items:end;
+    }
+
+    .hscreen {
+      border-radius:8px 8px 0 0; overflow:hidden;
+      border:1px solid rgba(255,255,255,0.12); border-bottom:none;
+      display:flex; flex-direction:column;
+    }
+
+    .hscreen-label {
+      font-size:0.5625rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+      color:rgba(255,255,255,0.35); padding:6px 10px; background:rgba(0,0,0,0.2); flex-shrink:0;
+    }
+
+    .hscreen img { width:100%; display:block; object-fit:cover; object-position:top; }
+    .hscreen.tall img { max-height:240px; }
+    .hscreen.short img { max-height:160px; }
+
+    /* META */
+    .case-meta-wrap { max-width:860px; margin:0 auto; padding:40px 40px 0; }
+    .case-meta { display:flex; flex-wrap:wrap; gap:32px; padding:32px 0; border-top:1px solid var(--border); }
+    .meta-label { font-size:0.6875rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-lighter); margin-bottom:5px; }
+    .meta-value { font-size:0.9375rem; font-weight:500; color:var(--text); }
+
+    /* IMPACT */
+    .impact-banner { background:var(--brand-dark); padding:56px 40px; }
+    .impact-inner { max-width:860px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:40px; }
+    .impact-number { font-family:var(--font-display); font-size:clamp(2.2rem,4vw,3rem); font-weight:700; color:#fff; letter-spacing:-0.03em; line-height:1; margin-bottom:8px; }
+    .impact-number span { color:rgba(255,255,255,0.4); }
+    .impact-label { font-size:0.8125rem; color:rgba(255,255,255,0.45); line-height:1.5; }
+
+    /* CONTENT SECTIONS */
+    .case-section { padding:72px 40px; max-width:860px; margin:0 auto; }
+    .section-label { font-size:0.6875rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--text); margin-bottom:10px; }
+    .section-heading { font-family:var(--font-display); font-size:clamp(1.4rem,2.5vw,1.875rem); font-weight:700; color:var(--text); letter-spacing:-0.02em; line-height:1.25; margin-bottom:24px; }
+    .body-text { font-size:0.9375rem; color:var(--text-light); line-height:1.8; margin-bottom:16px; }
+    .divider { height:1px; background:var(--border); max-width:860px; margin:0 auto; }
+
+    .highlight-quote { border-left:3px solid var(--brand); padding:18px 22px; margin:28px 0; background:rgba(9,95,52,0.04); border-radius:0 8px 8px 0; }
+    .highlight-quote p { font-family:var(--font-display); font-size:1.0625rem; font-style:italic; color:var(--text); line-height:1.65; }
+
+    /* IMAGE BLOCKS */
+    /* full width */
+    .img-full { max-width:860px; margin:28px auto; padding:0 40px; }
+    .img-full figure { }
+    .img-full img { width:100%; display:block; border-radius:10px; border:1px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.07); }
+    .img-full figcaption { font-size:0.75rem; color:var(--text-lighter); margin-top:8px; text-align:center; letter-spacing:0.02em; }
+
+    /* wide — bleeds slightly beyond section max-width */
+    .img-wide { max-width:1040px; margin:28px auto; padding:0 40px; }
+    .img-wide img { width:100%; display:block; border-radius:10px; border:1px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.07); }
+    .img-wide figcaption { font-size:0.75rem; color:var(--text-lighter); margin-top:8px; text-align:center; }
+
+    /* 2 up */
+    .img-2up { max-width:1040px; margin:28px auto; padding:0 40px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .img-2up figure { }
+    .img-2up img { width:100%; display:block; border-radius:10px; border:1px solid var(--border); box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+    .img-2up figcaption { font-size:0.6875rem; color:var(--text-lighter); margin-top:6px; text-align:center; }
+
+    /* 3 up */
+    .img-3up { max-width:1040px; margin:28px auto; padding:0 40px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+    .img-3up figure { }
+    .img-3up img { width:100%; display:block; border-radius:8px; border:1px solid var(--border); box-shadow:0 2px 12px rgba(0,0,0,0.05); }
+    .img-3up figcaption { font-size:0.625rem; color:var(--text-lighter); margin-top:5px; text-align:center; }
+
+    /* annotation label on image */
+    .img-annotated { position:relative; display:inline-block; width:100%; }
+    .img-annotated img { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+    .img-tag {
+      position:absolute; top:12px; left:12px;
+      background:rgba(9,95,52,0.9); color:#fff;
+      font-size:0.5625rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      padding:4px 10px; border-radius:100px;
+    }
+    .img-tag.red { background:rgba(192,9,42,0.9); }
+    .img-tag.light { background:rgba(255,255,255,0.9); color:var(--text); }
+
+    /* PROBLEM CARDS */
+    .problem-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:28px; }
+    .problem-card { border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .problem-card-img { width:100%; display:block; border-bottom:1px solid var(--border); aspect-ratio:4/3; object-fit:cover; object-position:top; }
+    .problem-card-body { padding:16px; background:var(--bg-alt); }
+    .problem-num { font-size:0.5625rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-lighter); margin-bottom:6px; }
+    .problem-title { font-size:0.875rem; font-weight:600; color:var(--text); margin-bottom:5px; }
+    .problem-desc { font-size:0.75rem; color:var(--text-light); line-height:1.6; }
+
+    /* ITERATION BLOCK — label + two images */
+    .iteration-block { margin-top:40px; }
+    .iteration-label {
+      display:flex; align-items:center; gap:12px; margin-bottom:16px;
+    }
+    .iter-badge {
+      font-size:0.625rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      padding:4px 12px; border-radius:100px; flex-shrink:0;
+    }
+    .iter-badge.before { background:#fff3f3; color:#c0392b; border:1px solid #fad7d7; }
+    .iter-badge.after  { background:var(--accent-dim); color:#1a7a4a; border:1px solid var(--accent-mid); }
+    .iter-badge.v1     { background:var(--bg-alt); color:var(--text-light); border:1px solid var(--border); }
+    .iter-badge.v2     { background:var(--brand-dark); color:#fff; border:1px solid var(--brand-dark); }
+    .iter-title { font-size:0.9375rem; font-weight:600; color:var(--text); }
+    .iter-desc  { font-size:0.8125rem; color:var(--text-light); margin-top:2px; }
+
+    /* FINDINGS */
+    .findings-list { margin-top:20px; display:flex; flex-direction:column; gap:4px; }
+    .finding-item { display:flex; align-items:flex-start; gap:14px; padding:13px 16px; border-radius:8px; font-size:0.9rem; color:var(--text); transition:background 0.15s; border:1px solid transparent; }
+    .finding-item:hover { background:var(--bg-alt); border-color:var(--border); }
+    .finding-num { font-family:var(--font-display); font-size:0.875rem; font-weight:700; color:var(--text-lighter); width:28px; flex-shrink:0; }
+
+    /* SPRINT */
+    .sprint-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:28px; }
+    .sprint-img { border-radius:10px; overflow:hidden; border:1px solid var(--border); }
+    .sprint-img img { width:100%; display:block; }
+    .sprint-img-caption { padding:10px 14px; background:var(--bg-alt); font-size:0.75rem; color:var(--text-light); font-weight:500; }
+
+    /* OUTCOMES */
+    .outcome-list { display:flex; flex-direction:column; gap:12px; margin-top:24px; }
+    .outcome-item { display:flex; align-items:flex-start; gap:14px; padding:16px 18px; border:1px solid var(--border); border-radius:10px; }
+    .outcome-dot { width:20px; height:20px; border-radius:50%; background:rgba(9,95,52,0.08); border:1px solid rgba(9,95,52,0.22); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+    .outcome-dot svg { width:10px; height:10px; }
+    .outcome-text { font-size:0.9375rem; color:var(--text); line-height:1.55; }
+
+    /* ABOUT + MORE */
+    .about-client { padding:60px 40px; background:var(--bg-alt); border-top:1px solid var(--border); }
+    .about-client-inner { max-width:860px; margin:0 auto; display:grid; grid-template-columns:180px 1fr; gap:48px; align-items:start; }
+    .client-logo-box { width:100%; aspect-ratio:3/2; background:#fff; border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:1.2rem; font-weight:700; color:var(--brand); }
+    .about-client-label { font-size:0.625rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--text-lighter); margin-bottom:10px; display:block; }
+    .about-client-name { font-family:var(--font-display); font-size:1.25rem; font-weight:700; color:var(--text); letter-spacing:-0.01em; margin-bottom:14px; }
+    .about-client-text { font-size:0.9rem; color:var(--text-light); line-height:1.75; }
+
+    .more-cases { padding:64px 40px; background:var(--bg); border-top:1px solid var(--border); }
+    .more-cases-inner { max-width:860px; margin:0 auto; }
+    .more-cases-header { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px; }
+    .more-cases-title { font-family:var(--font-display); font-size:1.1rem; font-weight:700; color:var(--text); letter-spacing:-0.01em; }
+    .more-cases-back { font-size:0.8125rem; font-weight:500; color:var(--text-light); text-decoration:none; }
+    .more-cases-back:hover { color:var(--text); }
+    .more-cases-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .more-card { display:block; text-decoration:none; border:1px solid var(--border); border-radius:14px; overflow:hidden; background:var(--bg); transition:transform 0.2s,box-shadow 0.2s; }
+    .more-card:hover { transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,0.08); }
+    .more-card-thumb { height:100px; display:flex; align-items:flex-end; padding:16px 20px; }
+    .more-card-name { font-family:var(--font-display); font-size:1.5rem; font-weight:700; color:#fff; letter-spacing:-0.025em; line-height:1; }
+    .more-card-body { padding:14px 20px 18px; }
+    .more-card-client { font-size:0.6875rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-lighter); margin-bottom:4px; }
+    .more-card-desc { font-size:0.8125rem; color:var(--text-light); line-height:1.55; }
+    .thumb-madrid { background:linear-gradient(135deg,#8B0000,#c0392b); }
+    .thumb-resp   { background:linear-gradient(135deg,#4a6b28,#748F48); }
+
+    footer { padding:28px 40px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    footer p { font-size:0.8125rem; color:var(--text-lighter); }
+    .footer-links { display:flex; gap:20px; }
+    .footer-links a { font-size:0.8125rem; color:var(--text-light); text-decoration:none; }
+    .footer-links a:hover { color:var(--text); }
+
+    @media (max-width:900px) {
+      nav { padding:16px 20px; }
+      .hero-inner, .case-meta-wrap, .case-section { padding-left:20px; padding-right:20px; }
+      .hero-screens { grid-template-columns:1fr; padding-left:20px; padding-right:20px; }
+      .hscreen.short { display:none; }
+      .img-full, .img-wide, .img-2up, .img-3up { padding-left:20px; padding-right:20px; }
+      .img-2up, .img-3up { grid-template-columns:1fr; }
+      .problem-cards { grid-template-columns:1fr; }
+      .sprint-grid { grid-template-columns:1fr; }
+      .impact-inner, .more-cases-grid { grid-template-columns:1fr 1fr; }
+      .about-client, .more-cases { padding-left:20px; padding-right:20px; }
+      .about-client-inner { grid-template-columns:1fr; gap:24px; }
+      footer { flex-direction:column; gap:16px; text-align:center; }
+    }
+    @media (max-width:600px) {
+      .impact-inner, .more-cases-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Back
+  </a>
+  <a href="index.html" class="nav-name">Lucía de la Cruz</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero-banner">
+  <img class="hero-bg" src="assets/cbre/landing.png" alt="" aria-hidden="true" />
+  <div class="hero-overlay"></div>
+
+  <div class="hero-inner">
+    <p class="eyebrow">CBRE — Internal Product Redesign</p>
+    <h1>Turning complex data<br/>into confident decisions</h1>
+    <p class="hero-desc">A complete UX/UI redesign of CBRE's Commute Analyzer — used daily by commercial teams across 5 countries to recommend the best office locations for their clients.</p>
+  </div>
+
+  <div class="hero-screens">
+    <div class="hscreen tall">
+      <p class="hscreen-label">Redesigned — map view</p>
+      <img src="assets/cbre/06-ia-iter2.png" alt="Redesigned map view" />
+    </div>
+    <div class="hscreen short">
+      <p class="hscreen-label">Redesigned — isochrones</p>
+      <img src="assets/cbre/05-isochrones.png" alt="Isochrones feature" />
+    </div>
+    <div class="hscreen short">
+      <p class="hscreen-label">Redesigned — data viz</p>
+      <img src="assets/cbre/07-data-new.png" alt="Redesigned data visualisation" />
+    </div>
+  </div>
+</div>
+
+<!-- META -->
+<div class="case-meta-wrap">
+  <div class="case-meta">
+    <div><p class="meta-label">Role</p><p class="meta-value">UX/UI Designer</p></div>
+    <div><p class="meta-label">Client</p><p class="meta-value">CBRE — Global Real Estate</p></div>
+    <div><p class="meta-label">Type</p><p class="meta-value">Internal B2B tool · Product redesign</p></div>
+    <div><p class="meta-label">Scope</p><p class="meta-value">Research · IA · Data viz · UI system</p></div>
+  </div>
+</div>
+
+<!-- IMPACT -->
+<div class="impact-banner">
+  <div class="impact-inner">
+    <div><div class="impact-number">15</div><div class="impact-label">User interviews across 5 countries</div></div>
+    <div><div class="impact-number">3</div><div class="impact-label">Core redesign areas: IA, data viz, visual components</div></div>
+    <div><div class="impact-number">2<span>wk</span></div><div class="impact-label">Agile design sprints with phased, zero-disruption delivery</div></div>
+  </div>
+</div>
+
+<!-- BACKGROUND -->
+<div class="case-section">
+  <p class="section-label">Background</p>
+  <h2 class="section-heading">A daily-use tool that was<br/>working against its users.</h2>
+  <p class="body-text">Commute Analyzer is CBRE's internal tool for helping commercial teams find the optimal office location for their clients — analysing employee commute patterns, travel time, CO₂ emissions, and accessibility across candidate sites.</p>
+  <p class="body-text">The product was technically capable but experientially broken. Slow workflows, inconsistent navigation, and outdated visuals created friction at precisely the moment commercial teams needed to move fast and look credible in front of clients.</p>
+</div>
+
+<!-- Full landing page image — with context -->
+<div class="case-section" style="padding-bottom:16px;">
+  <p class="section-label">The product</p>
+  <h2 class="section-heading">What Commute Analyzer does.</h2>
+  <p class="body-text">To give full context to the redesign, we created a landing page at the end of the project to communicate the product's value proposition to new commercial teams. It captures the three core capabilities — finding the optimal office location, tracking CO₂ emissions across sites, and giving visibility into employee travel patterns — and shows how the tool positions itself within CBRE's offering.</p>
+  <p class="body-text">This landing page was designed <em>after</em> the redesign was complete, translating the redesigned product into a clear narrative for onboarding and internal adoption.</p>
+</div>
+
+<figure class="img-wide">
+  <img src="assets/cbre/landing.png" alt="Commute Analyzer landing page — product overview" />
+  <figcaption>Commute Analyzer landing page — created post-redesign to support internal onboarding</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<!-- RESEARCH -->
+<div class="case-section">
+  <p class="section-label">Research approach</p>
+  <h2 class="section-heading">Two methods.
+One converged picture.<br/>One converged picture.</h2>
+  <p class="body-text">The research phase used two complementary lenses: user interviews with commercial teams across 5 countries to understand the real-world friction, and a heuristic evaluation against the Nielsen Norman framework to surface structural usability issues that users had normalised and stopped reporting.</p>
+
+  <div class="highlight-quote">
+    <p>"We need the client to understand the data for themselves to speed up the process. The visual design is complex and kind of old — clients put these graphics in their decision reports."</p>
+  </div>
+</div>
+
+<!-- Double diamond + heuristic -->
+<div class="img-2up">
+  <figure>
+    <img src="assets/cbre/double-diamond.jpg" alt="Double Diamond methodology — Revamped" />
+    <figcaption>Revamped Double Diamond — the research framework applied</figcaption>
+  </figure>
+  <figure>
+    <img src="assets/cbre/heuristic.jpg" alt="Nielsen Norman heuristic evaluation framework" />
+    <figcaption>Nielsen Norman 10 heuristics — the audit framework</figcaption>
+  </figure>
+</div>
+
+<div class="divider"></div>
+
+<!-- PROBLEMS -->
+<div class="case-section">
+  <p class="section-label">What we found</p>
+  <h2 class="section-heading">Five findings.<br/>One clear direction.</h2>
+  <p class="body-text">User interviews and heuristic evaluation converged on the same diagnosis: a product built around technical completeness rather than human usability. These were the three core failure areas.</p>
+
+  <div class="findings-list">
+    <div class="finding-item"><span class="finding-num">01</span><span>No information architecture — users couldn't orient themselves or understand where they were</span></div>
+    <div class="finding-item"><span class="finding-num">02</span><span>Data was visually unclear — charts didn't communicate what they needed to, and couldn't be exported</span></div>
+    <div class="finding-item"><span class="finding-num">03</span><span>Inconsistent UI patterns — navigation, filtering, and controls didn't follow any standard</span></div>
+    <div class="finding-item"><span class="finding-num">04</span><span>Cognitive overload at key decision points — information wasn't delivered efficiently</span></div>
+    <div class="finding-item"><span class="finding-num">05</span><span>Outdated visual design — undermined trust in client-facing presentations</span></div>
+  </div>
+</div>
+
+<!-- 3 problem screenshots -->
+<div class="img-3up">
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/cbre/01-before-ia.png" alt="Before — lack of information architecture" />
+      <span class="img-tag red">Problem 01</span>
+    </div>
+    <figcaption>No IA — navigation tabs carry equal weight, no hierarchy</figcaption>
+  </figure>
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/cbre/02-before-data.png" alt="Before — unclear data" />
+      <span class="img-tag red">Problem 02</span>
+    </div>
+    <figcaption>Unclear data — charts don't communicate meaning clearly</figcaption>
+  </figure>
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/cbre/03-before-ui.png" alt="Before — outdated UI" />
+      <span class="img-tag red">Problem 03</span>
+    </div>
+    <figcaption>Outdated UI — dark, heavy, not suitable for client exports</figcaption>
+  </figure>
+</div>
+
+<div class="divider"></div>
+
+<!-- REDESIGN: IA -->
+<div class="case-section">
+  <p class="section-label">Redesign — Information architecture</p>
+  <h2 class="section-heading">Restructuring how users<br/>navigate the tool.</h2>
+  <p class="body-text">The original product had a flat navigation with no hierarchy — every section felt equally important, making it impossible to orient within a project. The redesign introduced a clear project header with persistent context (project name, employee count, active filters), inline filter chips, and a tab structure that reflects the actual analysis workflow.</p>
+  <p class="body-text">Two versions were explored before landing on the final approach. The key design question was how much context to surface at all times — too little and users lose orientation, too much and the interface becomes noisy. The final version strikes a balance: a persistent header anchors every view, while filters and configuration stay accessible but unobtrusive.</p>
+</div>
+
+<div class="img-2up">
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/cbre/06-ia-iter1.png" alt="IA redesign — version 1" />
+      <span class="img-tag v1">Version 1</span>
+    </div>
+    <figcaption>V1 — Project header introduced, tabs reorganised by workflow</figcaption>
+  </figure>
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/cbre/06-ia-iter2.png" alt="IA redesign — final version" />
+      <span class="img-tag v2">Final</span>
+    </div>
+    <figcaption>Final — Denser project context, cleaner breadcrumb, map with location data</figcaption>
+  </figure>
+</div>
+
+<!-- Filters — secondary, smaller -->
+<div class="img-full" style="max-width:560px;">
+  <figure>
+    <img src="assets/cbre/06-filters.png" alt="Filters and configuration panel redesigned" />
+    <figcaption>Configuration panel — standardised filter patterns with clear hierarchy</figcaption>
+  </figure>
+</div>
+
+<div class="divider"></div>
+
+<!-- REDESIGN: DATA VIZ -->
+<div class="case-section">
+  <p class="section-label">Redesign — Data visualisation</p>
+  <h2 class="section-heading">Making data<br/>tell a story.</h2>
+  <p class="body-text">The original charts used dark backgrounds, inconsistent colour coding, and lacked contextual labels — making it difficult for clients to read, and impossible to use in reports. The redesign prioritised export-ready visualisations: light backgrounds, clear labelling, and a colour system that communicated meaning rather than just differentiating bars.</p>
+</div>
+
+<!-- Data viz before x2 -->
+<div class="img-2up">
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/cbre/07-data-prev1.png" alt="Data visualisation before — CO2 emissions chart" />
+      <span class="img-tag red">Before</span>
+    </div>
+    <figcaption>Before — dark background, unclear labelling, not exportable</figcaption>
+  </figure>
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/cbre/07-data-prev2.png" alt="Data visualisation before — carbon footprint" />
+      <span class="img-tag red">Before</span>
+    </div>
+    <figcaption>Before — stacked bars with no clear reading order or context</figcaption>
+  </figure>
+</div>
+
+<!-- Data viz after -->
+<figure class="img-wide">
+  <div class="img-annotated">
+    <img src="assets/cbre/07-data-new.png" alt="Data visualisation redesigned — CO2 Emissions" />
+    <span class="img-tag">After</span>
+  </div>
+  <figcaption>After — light, export-ready charts with clear transport mode breakdown and comparative data</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<!-- REDESIGN: CONSISTENCY -->
+<div class="case-section">
+  <p class="section-label">Redesign — Consistency & standards</p>
+  <h2 class="section-heading">Bringing order to<br/>the comparative view.</h2>
+  <p class="body-text">The Comparative Statement was one of the most used screens — commercial teams would export it directly into client presentations. The original version mixed inconsistent table styles, unclear colour hierarchies, and redundant information. The redesign introduced a structured comparison table with consistent grouping, highlight colours for key metrics, and a clear current-site anchor.</p>
+</div>
+
+<div class="img-2up">
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/cbre/08-consistency-prev.png" alt="Comparative statement before" />
+      <span class="img-tag red">Before</span>
+    </div>
+    <figcaption>Before — dark table, inconsistent columns, unclear metric grouping</figcaption>
+  </figure>
+  <figure>
+    <div class="img-annotated">
+      <img src="assets/cbre/08-consistency-new.png" alt="Comparative statement redesigned" />
+      <span class="img-tag">After</span>
+    </div>
+    <figcaption>After — clean table, grouped metrics, current site clearly anchored, export-ready</figcaption>
+  </figure>
+</div>
+
+<div class="divider"></div>
+
+<!-- NEW FEATURE: ISOCHRONES -->
+<div class="case-section">
+  <p class="section-label">Redesign — New feature</p>
+  <h2 class="section-heading">Isochrones — a net-new capability<br/>designed from scratch.</h2>
+  <p class="body-text">Beyond the redesign, the project included the design of a new feature: Isochrones. This visualisation shows the real geographic area reachable from a site within a given travel time — by any transport mode, at any time of day. It gives commercial teams a powerful, map-based way to show clients the difference between candidate sites in a single glance.</p>
+  <p class="body-text">The feature was designed iteratively with the development team, ensuring the time/mode controls were technically feasible within the existing data infrastructure.</p>
+</div>
+
+<figure class="img-wide">
+  <img src="assets/cbre/05-isochrones.png" alt="New Isochrones feature — map with reachability zones" />
+  <figcaption>Isochrones — new feature showing geographic reachability by time and transport mode</figcaption>
+</figure>
+
+<div class="divider"></div>
+
+<!-- WORKFLOW -->
+<div class="case-section">
+  <p class="section-label">Workflow</p>
+  <h2 class="section-heading">Two-week sprints.<br/>Zero disruption.</h2>
+  <p class="body-text">The project ran in two-week agile sprints. Each sprint began with planning, moved through design and UX review cycles, and closed with a joint delivery session between UX, PM, and the development team. This structure meant every design decision was validated before implementation — and the live product was never disrupted.</p>
+</div>
+
+<div class="img-full" style="max-width:600px;">
+  <figure>
+    <img src="assets/cbre/delivery.jpg" alt="Delivery and refinement session — UX and PM" />
+    <figcaption>Delivery & refinement — UX and PM sign-off at sprint close</figcaption>
+  </figure>
+</div>
+
+<div class="divider" style="margin-top:40px;"></div>
+
+<!-- OUTCOMES -->
+<div class="case-section">
+  <p class="section-label">Outcomes</p>
+  <h2 class="section-heading">A tool teams want<br/>to show their clients.</h2>
+  <p class="body-text">The redesign transformed a technically capable but friction-heavy product into one that commercial teams could use confidently in client-facing contexts — which was always the real measure of success.</p>
+
+  <div class="outcome-list">
+    <div class="outcome-item">
+      <div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div>
+      <p class="outcome-text">Increased product adoption — internal users engaged more frequently with a product they previously found cumbersome.</p>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div>
+      <p class="outcome-text">Strong qualitative feedback from internal users during testing — particularly around the clarity of the new data visualisations and their usability in client presentations.</p>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div>
+      <p class="outcome-text">Isochrones feature shipped — a net-new capability extending the tool's value proposition to clients, designed from scratch during the redesign process.</p>
+    </div>
+    <div class="outcome-item">
+      <div class="outcome-dot"><svg viewBox="0 0 12 12" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></div>
+      <p class="outcome-text">Zero operational disruption — phased sprint delivery kept the product live and fully usable throughout the entire redesign.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT CLIENT -->
+<div class="about-client">
+  <div class="about-client-inner">
+    <div class="client-logo-box">CBRE</div>
+    <div>
+      <span class="about-client-label">About the client</span>
+      <p class="about-client-name">CBRE Group, Inc.</p>
+      <p class="about-client-text">CBRE is the world's largest commercial real estate services and investment firm, operating in more than 100 countries. It provides a comprehensive range of integrated services including facilities management, transaction and project management, property management, investment management, and development services. It employs over 100,000 people worldwide. Commute Analyzer is one of CBRE's proprietary internal tools — used by commercial teams across Europe to help clients make data-driven decisions about office location based on employee commute patterns, carbon footprint, and accessibility analysis.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MORE CASES -->
+<div class="more-cases">
+  <div class="more-cases-inner">
+    <div class="more-cases-header">
+      <p class="more-cases-title">More case studies</p>
+      <a href="index.html" class="more-cases-back">← Back to all work</a>
+    </div>
+    <div class="more-cases-grid">
+      <a href="madrid-digital.html" class="more-card">
+        <div class="more-card-thumb thumb-madrid"><span class="more-card-name">Madrid Digital</span></div>
+        <div class="more-card-body">
+          <p class="more-card-client">Comunidad de Madrid</p>
+          <p class="more-card-desc">Redesigning public services for 6.8 million citizens.</p>
+        </div>
+      </a>
+      <a href="respirapp.html" class="more-card">
+        <div class="more-card-thumb thumb-resp"><span class="more-card-name">Respirapp</span></div>
+        <div class="more-card-body">
+          <p class="more-card-client">AECC</p>
+          <p class="more-card-desc">Helping people quit smoking through better design.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Lucía de la Cruz</p>
+  <div class="footer-links">
+    <a href="mailto:luciadcr8@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/lucia-de-la-cruz-rodriguez/" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+
+</body>
+</html>
